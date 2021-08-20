@@ -1,0 +1,10 @@
+body {
+  display: grid;
+  place-items: center;
+  min-width: 90vw;
+  min-height: 90vh;
+}
+
+#canvas {
+  border:1px solid #d3d3d3;
+}
