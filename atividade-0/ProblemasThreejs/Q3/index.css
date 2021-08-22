@@ -1,0 +1,25 @@
+.info {
+  display: block;
+  position: fixed;
+}
+
+.MeshLambertMaterial {
+	top: 40px;
+  left: 170px;
+	text-align: center;
+	z-index: 100;
+}
+
+.LineSegments {
+	top: 40px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+}
+
+.MeshNormalMaterial {
+	top: 40px;
+  right: 150px;
+	text-align: center;
+	z-index: 100;
+}

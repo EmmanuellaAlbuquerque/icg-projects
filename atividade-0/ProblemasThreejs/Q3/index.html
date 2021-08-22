@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="index.css">
+  <title>Três Cubos</title>
+</head>
+
+<body style="cursor: pointer;">
+  <!-- 
+    IF you having problems with Cross Origin you can:
+    1. remove type="module" from rotated_cube
+    2. remove all CDN imports from rotated_cube
+    3. download the needed components
+    4. uncomment three.js https://threejs.org/build/three.js
+    5. you may need to add other components like 
+    OrbitControls.
+    6. and enjoy!!! (Or you can use NPM, or CDN)
+  -->
+  <!-- <script src="three.js"></script> -->
+
+  <!-- 
+      Or you can run with Live Server in VScode
+  -->
+  <div class="info">Materials</div>
+  <div class="info MeshLambertMaterial">MeshLambertMaterial</div>
+  <div class="info LineSegments">LineSegments</div>
+  <div class="info MeshNormalMaterial">MeshNormalMaterial</div>
+  <script type="module" src="three_cubes.js">
+  </script>
+</body>
+
+</html>
