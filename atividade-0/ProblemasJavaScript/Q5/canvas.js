@@ -4,6 +4,31 @@ var context = canvas.getContext("2d");
 context.fillStyle = "#f0e68c";
 context.fillRect(0, 0, canvas.width, canvas.height);
 
+// ------------------------ Desenha o GRAMADO ------------------------
+context.beginPath();
+context.lineWidth = 5;
+
+const GREENLawnHeight = 150;
+var x = 0;
+var y = GREENLawnHeight;
+
+while (x < canvas.width) {
+  context.moveTo(x, y);
+  x += 30;
+  if (y == GREENLawnHeight) {
+    y -= 20;
+  }
+  else {
+    y += 20;
+  }
+  context.lineTo(x, y);
+
+  context.strokeStyle = '#419D78';
+  context.stroke();
+}
+
+context.closePath();
+
 // ------------------------ Desenha o primeiro PACMAN1 ------------------------
 // Desenha o Círculo do Pacman
 context.beginPath();
