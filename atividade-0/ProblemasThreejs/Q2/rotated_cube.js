@@ -34,12 +34,12 @@ function rotateCube() {
 }
 
 // Adding animate loop
-function render() {
-  requestAnimationFrame(render);
+function renderScene() {
+  requestAnimationFrame(renderScene);
 
   rotateCube();
 
   renderer.render(scene, camera);
 }
 
-render();
+renderScene();

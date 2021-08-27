@@ -1,25 +1,26 @@
 .info {
   display: block;
   position: fixed;
+	font-size: 1.5rem;
 }
 
 .MeshLambertMaterial {
-	top: 40px;
-  left: 170px;
+	top: 100px;
+  left: 310px;
 	text-align: center;
 	z-index: 100;
 }
 
-.LineSegments {
-	top: 40px;
+.LineDashedMaterial {
+	top: 100px;
 	width: 100%;
 	text-align: center;
 	z-index: 100;
 }
 
 .MeshNormalMaterial {
-	top: 40px;
-  right: 150px;
+	top: 100px;
+  right: 310px;
 	text-align: center;
 	z-index: 100;
 }

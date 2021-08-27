@@ -29,9 +29,9 @@ scene.add(cube);
 const controls = new OrbitControls(camera, renderer.domElement);
 
 // Adding animate loop
-function render() {
-  requestAnimationFrame(render);
+function renderScene() {
+  requestAnimationFrame(renderScene);
   renderer.render(scene, camera);
 }
 
-render();
+renderScene();
