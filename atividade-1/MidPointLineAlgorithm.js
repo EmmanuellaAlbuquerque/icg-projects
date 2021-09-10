@@ -84,6 +84,7 @@ function MidPointY(x0, y0, x1, y1, color_0, color_1) {
 
   while (y < y1) {
     y++;
+
     if (d <= 0) {
       d += 2 * dx;
     }
@@ -102,21 +103,24 @@ function MidPointY(x0, y0, x1, y1, color_0, color_1) {
 
 function MidPointLineAlgorithm(x0, y0, x1, y1, color_0, color_1) {
 
-  if (Math.abs(y1 - y0) < Math.abs(x1 - x0)) {
+  var dx = x1 - x0;
+  var dy = y1 - y0;
+
+  if (Math.abs(dy) < Math.abs(dx)) {
+
     if (x0 > x1) {
       MidPointX(x1, y1, x0, y0, color_0, color_1);
     }
-    else { // x1 > x0
+    else { // x1 > x0 - normal case
       MidPointX(x0, y0, x1, y1, color_0, color_1);
     }
-
   }
   else {
 
     if (y0 > y1) {
       MidPointY(x1, y1, x0, y0, color_0, color_1);
     }
-    else { // y1 > y0
+    else { // y1 > y0 - normal case
       MidPointY(x0, y0, x1, y1, color_0, color_1);
     }
 
@@ -160,8 +164,8 @@ function DrawLightPortrait(increment) {
 
 function DrawFreeThemePortrait() {
   // DrawLightPortrait(2);
-  MidPointLineAlgorithm(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-  // DrawTriangle(2, 2, 10, 10, 30, 30, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+  // MidPointLineAlgorithm(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  // DrawTriangle(2, 2, 200, 200, 30, 30, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
 }
 
 
@@ -172,3 +176,8 @@ function DrawFreeThemePortrait() {
 // DrawLightPortrait();
 DrawFreeThemePortrait();
 
+// MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+// MidPointLineAlgorithm(100, 30, 64, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+
+// MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+MidPointLineAlgorithm(2, 2, 50, 50, [255, 0, 0, 255], [255, 255, 0, 255]);
