@@ -22,7 +22,7 @@ function getDeltaColors(color_0, color_1, delta) {
   return deltaColors;
 }
 
-function MidPointX(x0, y0, x1, y1, color_0, color_1) {
+function MidPointXdiff(x0, y0, x1, y1, color_0, color_1) {
 
   var x = x0;
   var y = y0;
@@ -62,7 +62,7 @@ function MidPointX(x0, y0, x1, y1, color_0, color_1) {
 
 }
 
-function MidPointY(x0, y0, x1, y1, color_0, color_1) {
+function MidPointYdiff(x0, y0, x1, y1, color_0, color_1) {
 
   var x = x0;
   var y = y0;
@@ -109,19 +109,19 @@ function MidPointLineAlgorithm(x0, y0, x1, y1, color_0, color_1) {
   if (Math.abs(dy) < Math.abs(dx)) {
 
     if (x0 > x1) {
-      MidPointX(x1, y1, x0, y0, color_0, color_1);
+      MidPointXdiff(x1, y1, x0, y0, color_0, color_1);
     }
     else { // x1 > x0 - normal case
-      MidPointX(x0, y0, x1, y1, color_0, color_1);
+      MidPointXdiff(x0, y0, x1, y1, color_0, color_1);
     }
   }
   else {
 
     if (y0 > y1) {
-      MidPointY(x1, y1, x0, y0, color_0, color_1);
+      MidPointYdiff(x1, y1, x0, y0, color_0, color_1);
     }
     else { // y1 > y0 - normal case
-      MidPointY(x0, y0, x1, y1, color_0, color_1);
+      MidPointYdiff(x0, y0, x1, y1, color_0, color_1);
     }
 
   }
@@ -133,7 +133,7 @@ function randomRGBA() {
 
 function getNewColor() {
   return [randomRGBA(),
-  randomRGBA(), randomRGBA(), 255];
+  randomRGBA(), randomRGBA(), randomRGBA()];
 }
 
 function DrawTriangle(x0, y0, x1, y1, x2, y2, color_0, color_1, color_2) {
@@ -181,26 +181,40 @@ function DrawFullLightPortrait() {
 function DrawFreeThemePortrait() {
   color_buffer.clear();
 
-  // x front house
-  DrawTriangle(65, 85, 83, 112, 100, 85, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
-
-  MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  // x rectangle kite
+  MidPointLineAlgorithm(64, 30, 88, 64, [255, 0, 0, 255], [255, 255, 0, 255]);
   MidPointLineAlgorithm(64, 30, 100, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(100, 30, 64, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(100, 30, 57, 70, [255, 0, 0, 255], [255, 255, 0, 255]);
 
-  MidPointLineAlgorithm(64, 80, 64, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(64, 80, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(100, 80, 100, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(57, 70, 64, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(88, 65, 57, 70, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(88, 65, 100, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
 
-  // little ant
-  MidPointLineAlgorithm(19, 32, 20, 32, [255, 0, 0, 255], [255, 255, 0, 255]);
+  // kite line
+  MidPointLineAlgorithm(100, 30, 106, 28, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(106, 28, 103, 21, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(103, 21, 112, 18, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(112, 18, 111, 10, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(111, 10, 117, 6, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(117, 6, 127, 0, [255, 0, 0, 255], [255, 255, 0, 255]);
 
-  // little park bench
-  MidPointLineAlgorithm(48, 60, 16, 62, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(24, 61, 20, 75, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(24, 61, 19, 51, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(40, 61, 41, 48, [255, 0, 0, 255], [255, 255, 0, 255]);
-  MidPointLineAlgorithm(40, 61, 46, 75, [255, 0, 0, 255], [255, 255, 0, 255]);
+  // diamond kite
+  DrawTriangle(14, 72, 26, 54, 11, 52, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+
+  DrawTriangle(26, 94, 39, 72, 45, 93, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+  DrawTriangle(26, 94, 14, 72, 10, 93, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+  DrawTriangle(39, 72, 26, 54, 44, 51, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+
+  DrawTriangle(14, 72, 39, 72, 26, 94, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+  DrawTriangle(14, 72, 39, 72, 26, 54, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+
+  // kite line
+  MidPointLineAlgorithm(26, 54, 30, 46, [255, 0, 0, 255], [0, 0, 255, 255]);
+  MidPointLineAlgorithm(30, 46, 26, 41, [255, 0, 0, 255], [0, 0, 255, 255]);
+  MidPointLineAlgorithm(26, 41, 29, 37, [255, 0, 0, 255], [0, 0, 255, 255]);
+  MidPointLineAlgorithm(29, 37, 25, 34, [255, 0, 0, 255], [0, 0, 255, 255]);
+  MidPointLineAlgorithm(25, 34, 30, 29, [255, 0, 0, 255], [0, 0, 255, 255]);
+  MidPointLineAlgorithm(30, 29, 43, 0, [255, 0, 0, 255], [0, 0, 255, 255]);
 
   // little sun
   for (var i = 2; i < 23; i += 5) {
@@ -210,4 +224,5 @@ function DrawFreeThemePortrait() {
   }
 }
 
-DrawFreeThemePortrait()
+MidPointLineAlgorithm(61, 120, 61, 29, [153, 51, 0, 0], [122, 41, 122, 0]);
+DrawTriangle(9, 29, 113, 29, 61, 121, [153, 51, 0, 0], [122, 41, 122, 0], [153, 51, 0, 0]);
