@@ -142,7 +142,19 @@ function DrawTriangle(x0, y0, x1, y1, x2, y2, color_0, color_1, color_2) {
   MidPointLineAlgorithm(x2, y2, x0, y0, color_0, color_2);
 }
 
+// ------------------------------------------------- USAGE EXAMPLES --------------------------------------------------
+function DrawLinePortrait() {
+  color_buffer.clear();
+  MidPointLineAlgorithm(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+}
+
+function DrawTrianglePortrait() {
+  color_buffer.clear();
+  DrawTriangle(25, 30, 50, 100, 100, 15, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+}
+
 function DrawLightPortrait(increment) {
+  color_buffer.clear();
   var xi = canvasXCenter;
   var yi = canvasYCenter;
   var minX = 0;
@@ -162,22 +174,40 @@ function DrawLightPortrait(increment) {
   }
 }
 
-function DrawFreeThemePortrait() {
-  // DrawLightPortrait(2);
-  // MidPointLineAlgorithm(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-  // DrawTriangle(2, 2, 200, 200, 30, 30, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
+function DrawFullLightPortrait() {
+  DrawLightPortrait(3);
 }
 
+function DrawFreeThemePortrait() {
+  color_buffer.clear();
 
-// --------------------------------------------------------------------------------------------------------
+  // x front house
+  DrawTriangle(65, 85, 83, 112, 100, 85, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
 
-// MidPointLineAlgorithm(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-// DrawTriangle(25, 30, 50, 100, 100, 15, [255, 0, 0, 255], [0, 0, 255, 255], [0, 255, 0, 255]);
-// DrawLightPortrait();
-DrawFreeThemePortrait();
+  MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(64, 30, 100, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(100, 30, 64, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
 
-// MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-// MidPointLineAlgorithm(100, 30, 64, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(64, 80, 64, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(64, 80, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(100, 80, 100, 30, [255, 0, 0, 255], [255, 255, 0, 255]);
 
-// MidPointLineAlgorithm(64, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
-MidPointLineAlgorithm(2, 2, 50, 50, [255, 0, 0, 255], [255, 255, 0, 255]);
+  // little ant
+  MidPointLineAlgorithm(19, 32, 20, 32, [255, 0, 0, 255], [255, 255, 0, 255]);
+
+  // little park bench
+  MidPointLineAlgorithm(48, 60, 16, 62, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(24, 61, 20, 75, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(24, 61, 19, 51, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(40, 61, 41, 48, [255, 0, 0, 255], [255, 255, 0, 255]);
+  MidPointLineAlgorithm(40, 61, 46, 75, [255, 0, 0, 255], [255, 255, 0, 255]);
+
+  // little sun
+  for (var i = 2; i < 23; i += 5) {
+    for (var j = 107; j < color_buffer.getHeight(); j += 5) {
+      MidPointLineAlgorithm(0, 126, i, j, [255, 255, 0, 255], [255, 255, 0, 255]);
+    }
+  }
+}
+
+DrawFreeThemePortrait()

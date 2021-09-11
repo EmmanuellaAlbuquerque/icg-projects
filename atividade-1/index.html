@@ -5,14 +5,23 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+  <title>Mid Point Line Algorithm</title>
 </head>
 
 <body>
 
   <canvas id="canvas" width="128" height="128"
-    style="border: 1px solid gray; width: 512px; height: 512px; image-rendering: pixelated; position: absolute; top:20px; left: 16px;">
+    style="border: 1px solid gray; image-rendering: pixelated; top:20px; left: 16px;">
   </canvas>
+
+  <div class="box-of-buttons">
+    <button onclick="DrawLinePortrait()">Draw Line Portrait</button>
+    <button onclick="DrawTrianglePortrait()">Draw Triangle Portrait</button>
+    <button onclick="DrawLightPortrait()">Draw Light Portrait</button>
+    <button onclick="DrawFullLightPortrait()">Draw Full Light Portrait</button>
+    <button onclick="DrawFreeThemePortrait()">Draw Free Theme Portrait</button>
+  </div>
 
   <script src="utils.js"></script>
   <script src="canvas.js"></script>

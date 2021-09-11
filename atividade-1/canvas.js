@@ -37,7 +37,7 @@ class Canvas {
       var x = (event.clientX - rect.left) * scaleX;
       var y = Math.abs(((event.clientY - rect.top) * scaleY) - canvas.height);
 
-      console.log(Math.floor(x), Math.floor(y));
+      console.log("x:", Math.floor(x), "& y:", Math.floor(y));
     }, false);
   }
 }
