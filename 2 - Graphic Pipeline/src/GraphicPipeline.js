@@ -90,24 +90,6 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
 
   let y_cam = zcam_cross_xcam.clone().divideScalar(zcam_xcam_norm)
 
-  // ---------- debug camera base vectors ----------
-  let cameraBaseVectors = {
-    cam_direction,
-    d_norm,
-    z_cam,
-    up_cross_zcam,
-    up_zcam_norm,
-    x_cam,
-    zcam_cross_xcam,
-    zcam_xcam_norm,
-    y_cam
-  }
-
-  for (const key in cameraBaseVectors) {
-    const element = cameraBaseVectors[key];
-    console.log(key, ":", element)
-  }
-
   // ---------- implementar aqui ----------------------------------------------
 
   // Construir 'm_bt', a inversa da matriz de base da câmera.
@@ -115,20 +97,23 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   // ---------- implementar aqui ----------------------------------------------
   let m_bt = new THREE.Matrix4();
 
-  m_bt.set(1.0, 0.0, 0.0, 0.0,
-           0.0, 1.0, 0.0, 0.0,
-           0.0, 0.0, 1.0, 0.0,
+  m_bt.set(x_cam.getComponent(0), x_cam.getComponent(1), x_cam.getComponent(2), 0.0,
+           y_cam.getComponent(0), y_cam.getComponent(1), y_cam.getComponent(2), 0.0,
+           z_cam.getComponent(0), z_cam.getComponent(1), z_cam.getComponent(2), 0.0,
            0.0, 0.0, 0.0, 1.0);
 
   // Construir a matriz 'm_t' de translação para tratar os casos em que as
   // origens do espaço do universo e da câmera não coincidem.
 
+  let origin = new THREE.Vector3(0.0,0.0,0.0); // vetor Origem no esp. do Universo.
+  let t = cam_pos.clone().sub(origin);
+
   // ---------- implementar aqui ----------------------------------------------
   let m_t = new THREE.Matrix4();
 
-  m_t.set(1.0, 0.0, 0.0, 0.0,
-          0.0, 1.0, 0.0, 0.0,
-          0.0, 0.0, 1.0, 0.0,
+  m_t.set(1.0, 0.0, 0.0, -t.getComponent(0),
+          0.0, 1.0, 0.0, -t.getComponent(1),
+          0.0, 0.0, 1.0, -t.getComponent(2),
           0.0, 0.0, 0.0, 1.0);
 
   // Constrói a matriz de visualização 'm_view' como o produto
@@ -143,13 +128,15 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
  * OBS: A matriz está carregada inicialmente com a identidade. 
  *****************************************************************************/
 
+  let d = 10;
+
   // ---------- implementar aqui ----------------------------------------------
   let m_projection = new THREE.Matrix4();
 
   m_projection.set(1.0, 0.0, 0.0, 0.0,
                    0.0, 1.0, 0.0, 0.0,
-                   0.0, 0.0, 1.0, 0.0,
-                   0.0, 0.0, 0.0, 1.0);
+                   0.0, 0.0, 1.0, d,
+                   0.0, 0.0, -1/d, 1.0);
 
   for (let i = 0; i < 8; ++i)
     vertices[i].applyMatrix4(m_projection);
@@ -160,6 +147,10 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
 
   // ---------- implementar aqui ----------------------------------------------
 
+  // Divide all vectors by homogeneous coordinate W
+  for (let i = 0; i < 8; ++i)
+    vertices[i].divideScalar(vertices[i].getComponent(3));
+
 /******************************************************************************
  * Matriz Viewport: Esp. Canônico --> Esp. Tela
  * OBS: A matriz está carregada inicialmente com a identidade. 
@@ -168,8 +159,8 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   // ---------- implementar aqui ----------------------------------------------
   let m_viewport = new THREE.Matrix4();
 
-  m_viewport.set(1.0, 0.0, 0.0, 0.0,
-                 0.0, 1.0, 0.0, 0.0,
+  m_viewport.set(color_buffer.getWidth()/2, 0.0, 0.0, 1,
+                 0.0, color_buffer.getHeight()/2, 0.0, 1,
                  0.0, 0.0, 1.0, 0.0,
                  0.0, 0.0, 0.0, 1.0);
 
@@ -185,3 +176,27 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   color_buffer.putPixel(vertices[6].x, vertices[6].y, [255,0,0]); 
 
 	// color_buffer.drawLine(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+
+  // ---------- debug camera base vectors ----------
+  let cameraBaseVectors = {
+    cam_direction,
+    d_norm,
+    z_cam,
+    up_cross_zcam,
+    up_zcam_norm,
+    x_cam,
+    zcam_cross_xcam,
+    zcam_xcam_norm,
+    y_cam,
+    origin,
+    t, 
+    m_bt,
+    m_t,
+    m_view,
+    vertices
+  }
+
+  for (const key in cameraBaseVectors) {
+    const element = cameraBaseVectors[key];
+    console.log(key, ":", element)
+  }
