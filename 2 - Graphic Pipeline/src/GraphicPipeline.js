@@ -105,7 +105,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   // Construir a matriz 'm_t' de translação para tratar os casos em que as
   // origens do espaço do universo e da câmera não coincidem.
 
-  let origin = new THREE.Vector3(0.0,0.0,0.0); // vetor Origem no esp. do Universo.
+  let origin = new THREE.Vector3(0.0, 0.0, 0.0); // vetor Origem no esp. do Universo.
   let t = cam_pos.clone().sub(origin);
 
   // ---------- implementar aqui ----------------------------------------------
@@ -128,7 +128,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
  * OBS: A matriz está carregada inicialmente com a identidade. 
  *****************************************************************************/
 
-  let d = 10;
+  let d = 1;
 
   // ---------- implementar aqui ----------------------------------------------
   let m_projection = new THREE.Matrix4();
@@ -136,7 +136,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   m_projection.set(1.0, 0.0, 0.0, 0.0,
                    0.0, 1.0, 0.0, 0.0,
                    0.0, 0.0, 1.0, d,
-                   0.0, 0.0, -1/d, 1.0);
+                   0.0, 0.0, -1/d, 0.0);
 
   for (let i = 0; i < 8; ++i)
     vertices[i].applyMatrix4(m_projection);
@@ -173,9 +173,23 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
 
   // ---------- implementar aqui ----------------------------------------------
 
-  color_buffer.putPixel(vertices[6].x, vertices[6].y, [255,0,0]); 
+  // Model Matrix loaded with a Translation in the center of the Canvas
+  // After all transformations
+  m_model.set(1.0, 0.0, 0.0, color_buffer.getWidth()/2,
+              0.0, 1.0, 0.0, color_buffer.getHeight()/2,
+              0.0, 0.0, 1.0, 0.0,
+              0.0, 0.0, 0.0, 1.0);
 
-	// color_buffer.drawLine(25, 30, 100, 80, [255, 0, 0, 255], [255, 255, 0, 255]);
+  for (let i = 0; i < 8; ++i)
+    vertices[i].applyMatrix4(m_model);
+
+  for (let i = 0; i < edges.length; i++) {
+    let [ vertex_index1, vertex_index2 ] = edges[i];
+    let vertex1 = vertices[vertex_index1];
+    let vertex2 = vertices[vertex_index2];
+
+    color_buffer.drawLine(vertex1.x, vertex1.y, vertex2.x, vertex2.y, [255, 0, 0, 255], [255, 0, 0, 255]);
+  }
 
   // ---------- debug camera base vectors ----------
   let cameraBaseVectors = {
