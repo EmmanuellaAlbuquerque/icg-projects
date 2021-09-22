@@ -61,7 +61,52 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
  * OBS: A matriz está carregada inicialmente com a identidade. 
  *****************************************************************************/
 
-  // Derivar os vetores da base da câmera a partir dos parâmetros informados acima.
+  // Derivar os vetores da base da câmera a partir dos parâmetros informados acima. ✓
+
+  // ---------------------------- SETTING ZCAM --------------------------------
+
+  let cam_direction = cam_look_at.clone().sub(cam_pos);
+
+  // Euclidean distance, NORM of Direction Vector
+  let d_norm = cam_direction.length();
+
+  let z_cam = cam_direction.clone().multiplyScalar(-1).divideScalar(d_norm);
+
+  // ---------------------------- SETTING XCAM --------------------------------
+
+  let up_cross_zcam = cam_up.clone().cross(z_cam);
+
+  // Euclidean distance, NORM of U x Z_cam
+  let up_zcam_norm = up_cross_zcam.length();
+
+  let x_cam = up_cross_zcam.clone().divideScalar(up_zcam_norm)
+
+  // ---------------------------- SETTING YCAM --------------------------------
+
+  let zcam_cross_xcam = z_cam.clone().cross(x_cam);
+
+  // Euclidean distance, NORM of Z_cam x X_cam
+  let zcam_xcam_norm = zcam_cross_xcam.length();
+
+  let y_cam = zcam_cross_xcam.clone().divideScalar(zcam_xcam_norm)
+
+  // ---------- debug camera base vectors ----------
+  let cameraBaseVectors = {
+    cam_direction,
+    d_norm,
+    z_cam,
+    up_cross_zcam,
+    up_zcam_norm,
+    x_cam,
+    zcam_cross_xcam,
+    zcam_xcam_norm,
+    y_cam
+  }
+
+  for (const key in cameraBaseVectors) {
+    const element = cameraBaseVectors[key];
+    console.log(key, ":", element)
+  }
 
   // ---------- implementar aqui ----------------------------------------------
 
