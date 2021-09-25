@@ -10,30 +10,83 @@ color_buffer.clear();
  * tem comprimento igual a 2.
  *****************************************************************************/
 //                                   X     Y     Z    W (coord. homogênea)
-let vertices = [new THREE.Vector4(-1.0, -1.0, -1.0, 1.0),
-                new THREE.Vector4( 1.0, -1.0, -1.0, 1.0),
-                new THREE.Vector4( 1.0, -1.0,  1.0, 1.0),
-                new THREE.Vector4(-1.0, -1.0,  1.0, 1.0),
-                new THREE.Vector4(-1.0,  1.0, -1.0, 1.0),
-                new THREE.Vector4( 1.0,  1.0, -1.0, 1.0),
-                new THREE.Vector4( 1.0,  1.0,  1.0, 1.0),
-                new THREE.Vector4(-1.0,  1.0,  1.0, 1.0)];
+// let vertices = [new THREE.Vector4(-1.0, -1.0, -1.0, 1.0),
+//                 new THREE.Vector4( 1.0, -1.0, -1.0, 1.0),
+//                 new THREE.Vector4( 1.0, -1.0,  1.0, 1.0),
+//                 new THREE.Vector4(-1.0, -1.0,  1.0, 1.0),
+//                 new THREE.Vector4(-1.0,  1.0, -1.0, 1.0),
+//                 new THREE.Vector4( 1.0,  1.0, -1.0, 1.0),
+//                 new THREE.Vector4( 1.0,  1.0,  1.0, 1.0),
+//                 new THREE.Vector4(-1.0,  1.0,  1.0, 1.0)];
+
+// let vertices = [new THREE.Vector4(1.0, 0.0, 1.0, 1.0),
+//                 new THREE.Vector4( 1.0, 0.0, -1.0, 1.0),
+//                 new THREE.Vector4( -1.0, 0.0,  -1.0, 1.0),
+//                 new THREE.Vector4( -1.0, 0.0,  1.0, 1.0),
+//                 new THREE.Vector4(0.0, 1.5,  0.0, 1.0)];
+
+// let vertices = [new THREE.Vector4(-1.0, -1.0, 1.0, 1.0),
+//   new THREE.Vector4( -1.0, 1.0, -1.0, 1.0),
+//   new THREE.Vector4( -1.0, -1.0,  -1.0, 1.0),
+//   new THREE.Vector4( 1.0, -1.0,  -1.0, 1.0),
+//   new THREE.Vector4(1.0, 1.0,  -1.0, 1.0)];                
+let t_prism = 1;
+let vertices = [new THREE.Vector4(-t_prism, 1.0, -1, 1.0),
+  new THREE.Vector4( t_prism, 1.0, -1, 1.0),
+  new THREE.Vector4( 0.0, 1.0,  1.0, 1.0),
+  new THREE.Vector4( -t_prism, -1.0,  -1.0, 1.0),
+  new THREE.Vector4(0.0, -1.0,  1.0, 1.0),
+  new THREE.Vector4(t_prism, -1.0,  -1.0, 1.0)
+]; 
 
 /******************************************************************************
  * As 12 arestas do cubo, indicadas através dos índices dos seus vértices.
  *****************************************************************************/
+// let edges = [[0,1],
+//              [1,2],
+//              [2,3],
+//              [3,0],
+//              [4,5],
+//              [5,6],
+//              [6,7],
+//              [7,4],
+//              [0,4],
+//              [1,5],
+//              [2,6],
+//              [3,7]];
+
+// let edges = [[0,1],
+//             [1,2],
+//             [2,3],
+//             [3,0],
+//             [1,4],
+//             [4,2],
+//             [3,4],
+//             [0,4],
+//             // [1,3]
+//           ];
+
+// let edges = [[0,1],
+//             [1,2],
+//             [2,3],
+//             [3,4],
+//             [4,1],
+//             [4,0],
+//             [0,2],
+//             [0,3],
+//           ];
+
 let edges = [[0,1],
-             [1,2],
-             [2,3],
-             [3,0],
-             [4,5],
-             [5,6],
-             [6,7],
-             [7,4],
-             [0,4],
-             [1,5],
-             [2,6],
-             [3,7]];
+            [1,2],
+            [2,0],
+            [3,5],
+            [5,4],
+            [4,3],
+            [0,3],
+            [1,5],
+            [2,4],
+
+          ];
 
 /******************************************************************************
  * Matriz Model (modelagem): Esp. Objeto --> Esp. Universo. 
@@ -46,7 +99,7 @@ m_model.set(1.0, 0.0, 0.0, 0.0,
             0.0, 0.0, 1.0, 0.0,
             0.0, 0.0, 0.0, 1.0);
 
-for (let i = 0; i < 8; ++i)
+for (let i = 0; i < vertices.length; ++i)
     vertices[i].applyMatrix4(m_model);
 
 /******************************************************************************
@@ -116,7 +169,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   //  de 'm_bt' e 'm_t'.
   let m_view = m_bt.clone().multiply(m_t);
 
-  for (let i = 0; i < 8; ++i)
+  for (let i = 0; i < vertices.length; ++i)
       vertices[i].applyMatrix4(m_view);
 
 /******************************************************************************
@@ -133,7 +186,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
                    0.0, 0.0, 1.0, d,
                    0.0, 0.0, -1/d, 0.0);
 
-  for (let i = 0; i < 8; ++i)
+  for (let i = 0; i < vertices.length; ++i)
     vertices[i].applyMatrix4(m_projection);
 
 /******************************************************************************
@@ -141,7 +194,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
  *****************************************************************************/
 
   // Divide all vectors by homogeneous coordinate W
-  for (let i = 0; i < 8; ++i)
+  for (let i = 0; i < vertices.length; ++i)
     vertices[i].divideScalar(vertices[i].getComponent(3));
 
 /******************************************************************************
@@ -167,7 +220,7 @@ let cam_up = new THREE.Vector3(0.0,1.0,0.0);      // vetor Up da câmera.
   //  de 'm_s' e 'm_t_viewport'.
   let m_viewport = m_s.clone().multiply(m_t_viewport);
 
-  for (let i = 0; i < 8; ++i)
+  for (let i = 0; i < vertices.length; ++i)
     vertices[i].applyMatrix4(m_viewport);
 
 /******************************************************************************
