@@ -237,7 +237,7 @@ showVertices();
     m_view,
     m_projection,
     m_viewport,
-    M
+    m_M: M
   }
 
   let matricesString = '';
@@ -269,6 +269,7 @@ showVertices();
     }
 
     let matrixString = `
+    M_{${key.split("_")[1]}} = 
     \\begin{bmatrix}
     ${matrix.elements[0].toFixed(2)}&  ${matrix.elements[1].toFixed(2)}&  ${matrix.elements[2].toFixed(2)}& ${matrix.elements[3].toFixed(2)}\\\\
     ${matrix.elements[4].toFixed(2)}&  ${matrix.elements[5].toFixed(2)}&  ${matrix.elements[6].toFixed(2)}& ${matrix.elements[7].toFixed(2)}\\\\
