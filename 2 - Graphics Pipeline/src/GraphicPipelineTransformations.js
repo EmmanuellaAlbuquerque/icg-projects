@@ -11,9 +11,9 @@ color_buffer.clear();
  *****************************************************************************/
 //                                   X     Y     Z    W (coord. homogênea)
 
-let vertices = [new THREE.Vector4(0.0, 1.0, 2.0, 1.0),
-                new THREE.Vector4(0.0, 2.0, 1.0, 1.0),
-                new THREE.Vector4(0.0, 1.0, 0, 1.0)];
+let vertices = [new THREE.Vector4(0.0, 0.0, 0.0, 1.0),
+                new THREE.Vector4(3.0, 0.0, -2.0, 1.0),
+                new THREE.Vector4(0.0, 0.0, -4, 1.0)];
 
 function showVertices() {
   let verticesCopy = vertices.map(x => {return {...x}})
@@ -45,7 +45,7 @@ let m_model = new THREE.Matrix4();
 //             0.0, 1.0, 0.0, 0.0,
 //             0.0, 0.0, 1.0, 0.0,
 //             0.0, 0.0, 0.0, 1.0);
-let theta = 90;
+let theta = -90;
 /******************************************************************************
  *   180° ------- π
  * angle  ------- x
@@ -53,13 +53,20 @@ let theta = 90;
  *****************************************************************************/
 let theta_radians = (theta * Math.PI) / 180;
 
-m_model.set(Math.cos(theta_radians), 0.0, Math.sin(theta_radians), 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            -Math.sin(theta_radians), 0.0, Math.cos(theta_radians), 0.0,
+// Eixo Y
+// m_model.set(Math.cos(theta_radians), 0.0, Math.sin(theta_radians), 0.0,
+//             0.0, 1.0, 0.0, 0.0,
+//             -Math.sin(theta_radians), 0.0, Math.cos(theta_radians), 0.0,
+//             0.0, 0.0, 0.0, 1.0);
+// for (let i = 0; i < vertices.length; ++i)
+//     vertices[i].applyMatrix4(m_model);
+
+m_model.set(Math.cos(theta_radians), -Math.sin(theta_radians), 0, 0.0,
+            Math.sin(theta_radians), Math.cos(theta_radians), 0.0, 0.0,
+            0, 0.0, 1, 0.0,
             0.0, 0.0, 0.0, 1.0);
 for (let i = 0; i < vertices.length; ++i)
     vertices[i].applyMatrix4(m_model);
-
 
 console.log('M Model')
 showVertices();
@@ -67,7 +74,7 @@ showVertices();
 /******************************************************************************
  * Parâmetros da camera sintética.
  *****************************************************************************/
-let cam_pos = new THREE.Vector3(1.0 , 2.0, 3.0);     // posição da câmera no esp. do Universo.
+let cam_pos = new THREE.Vector3(5.0 , 0.0, -2.0);     // posição da câmera no esp. do Universo.
 let cam_look_at = new THREE.Vector3(0.0, 0.0, 0.0); // ponto para o qual a câmera aponta.
 let cam_up = new THREE.Vector3(0.0, 1.0, 0.0);      // vetor Up da câmera.
 
@@ -81,7 +88,7 @@ let cam_up = new THREE.Vector3(0.0, 1.0, 0.0);      // vetor Up da câmera.
   // ---------------------------- SETTING ZCAM --------------------------------
 
   // let cam_direction = cam_look_at.clone().sub(cam_pos);
-  let cam_direction = new THREE.Vector3(0.0, 0.0, -1.0);      // vetor Up da câmera.
+  let cam_direction = new THREE.Vector3(-1.0, 0.0, 0.0);      // vetor Direção da câmera.
 
   // Euclidean distance, NORM of Direction Vector
   let d_norm = cam_direction.length();
@@ -222,12 +229,15 @@ showVertices();
   m_projection.transpose();
   m_viewport.transpose();
 
+  let M = m_model.clone().multiply(m_view).multiply(m_projection);
+
   // ---------- All Pipeline Matrices ----------
   let matrices = {
     m_model,
     m_view,
     m_projection,
     m_viewport,
+    M
   }
 
   let matricesString = '';
@@ -287,3 +297,16 @@ showVertices();
   
   // // Start file download.
   // download("hello.txt", matrixString);
+
+  // console.log(x_cam)
+  // console.log(y_cam)
+  // console.log(z_cam)
+
+
+  //     m_model,
+    // m_view,
+    // m_projection,
+
+  // let M = m_model.clone().multiply(m_view).multiply(m_projection);
+  // console.log(M)
+
