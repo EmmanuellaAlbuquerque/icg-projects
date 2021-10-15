@@ -20,12 +20,17 @@ function changeTheta() {
   }
 }
 
-function displayPipelineRender(form="cube", rotate=false) {
+function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
   changeTheta()
 
   // Cria um color buffer para armazenar a imagem final.
   let color_buffer = new Canvas("canvas");
   color_buffer.clear();
+
+  if (pixelated) {
+    color_buffer.setWidth(512);
+    color_buffer.setHeight(512);
+  }
   
   /******************************************************************************
    * Vértices do modelo (cubo) centralizado no seu espaco do objeto. Os dois
@@ -364,4 +369,8 @@ function displayPipelineRender(form="cube", rotate=false) {
 
   function StopRotation() {
     clearInterval(createPipelineLoop);
+  }
+
+  function RemovePixelated() {
+    displayPipelineRender(actualForm, false, true);
   }

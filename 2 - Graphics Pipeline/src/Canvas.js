@@ -17,11 +17,19 @@ class Canvas {
   }
 
   getWidth() {
-    return this.canvas.height;
+    return this.canvas.width;
   }
 
   getHeight() {
-    return this.canvas.width;
+    return this.canvas.height;
+  }
+
+  setWidth(width) {
+    return this.canvas.width = width;
+  }
+
+  setHeight(height) {
+    return this.canvas.height = height;
   }
 
   /**
