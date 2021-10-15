@@ -7,6 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <title>Graphics Pipeline</title>
+    <!-- 
+    IF you having problems with Cross Origin you can:
+    1. remove type="module" from cube.js
+    2. remove import * as THREE from cube.js
+    3. uncomment three.js
+    4. and enjoy!!!  
+  -->
+  <script src="three.js"></script>
+
+  <!-- 
+      Or you can run with Live Server in VScode
+  -->
+  <!-- <script type="module" src="GraphicsPipeline.js"></script> -->
 </head>
 
 <body>
@@ -17,25 +30,15 @@
 
   <div class="box-of-buttons">
     <button onclick="Cube()">Cube</button>
+    <button onclick="Pyramid()">Pyramid</button>
+    <button onclick="Triangle()">Triangle</button>
+    <button onclick="Prism()">Prism</button>
+    <button onclick="StartRotation()">Start Rotate Form</button>
+    <button onclick="StopRotation()">Stop Rotate Form</button>
   </div>
 
   <script src="Canvas.js"></script>
-  <script src="Forms.js"></script>
-
-  <!-- 
-    IF you having problems with Cross Origin you can:
-    1. remove type="module" from cube.js
-    2. remove import * as THREE from cube.js
-    3. uncomment three.js
-    4. and enjoy!!!  
-  -->
-  <!-- <script src="three.js"></script> -->
-
-  <!-- 
-      Or you can run with Live Server in VScode
-  -->
-  <script type="module" src="GraphicsPipeline.js">
-  </script>
+  <script src="GraphicsPipeline.js"></script>
 
 </body>
 

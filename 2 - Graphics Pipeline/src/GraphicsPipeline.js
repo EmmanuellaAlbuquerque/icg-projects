@@ -1,7 +1,8 @@
-import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.131.3-QQa34rwf1xM5cawaQLl8/mode=imports,min/optimized/three.js';
+// import * as THREE from 'https://cdn.skypack.dev/pin/three@v0.131.3-QQa34rwf1xM5cawaQLl8/mode=imports,min/optimized/three.js';
 
 var initialTHETA = 0;
 var diff = 10;
+var actualForm = "cube";
 
 function changeTheta() {
   initialTHETA += diff; 
@@ -19,7 +20,7 @@ function changeTheta() {
   }
 }
 
-function displayRenderPipeline() {
+function displayPipelineRender(form="cube", rotate=false) {
   changeTheta()
 
   // Cria um color buffer para armazenar a imagem final.
@@ -110,19 +111,43 @@ function displayRenderPipeline() {
               [2,4],
             ];
   
-  let vertices = cubeVertices;
-  let edges = cubeEdges;
+  let forms = {
+    cube: {
+      vertices: cubeVertices, 
+      edges: cubeEdges,
+    },
+    pyramid: {
+      vertices: pyramidVertices, 
+      edges: pyramidEdges,
+    },
+    triangle: {
+      vertices: triangleVertices, 
+      edges: triangleEdges,
+    },
+    prism: {
+      vertices: prismVertices, 
+      edges: prismEdges,
+    },
+  }
+
+  let actualForm = forms[`${form}`];
+
+  let formVertices = actualForm.vertices;
+  let formEdges = actualForm.edges;
+
+  let vertices = formVertices;
+  let edges = formEdges;
   
   /******************************************************************************
    * Matriz Model (modelagem): Esp. Objeto --> Esp. Universo. 
    * OBS: A matriz está carregada inicialmente com a identidade.
    *****************************************************************************/
   let m_model = new THREE.Matrix4();
-  
-  // m_model.set(1.0, 0.0, 0.0, 0.0,
-  //             0.0, 1.0, 0.0, 0.0,
-  //             0.0, 0.0, 1.0, 0.0,
-  //             0.0, 0.0, 0.0, 1.0);
+
+  m_model.set(1.0, 0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0, 0.0,
+              0.0, 0.0, 1.0, 0.0,
+              0.0, 0.0, 0.0, 1.0);
 
   let theta = initialTHETA;
   // console.log(theta)
@@ -133,10 +158,17 @@ function displayRenderPipeline() {
    *****************************************************************************/
   let theta_radians = (theta * Math.PI) / 180;
 
-  m_model.set(Math.cos(theta_radians), 0.0, Math.sin(theta_radians), 0.0,
+  let m_y_rotation = new THREE.Matrix4();
+
+  m_y_rotation.set(Math.cos(theta_radians), 0.0, Math.sin(theta_radians), 0.0,
               0.0, 1.0, 0.0, 0.0,
               -Math.sin(theta_radians), 0.0, Math.cos(theta_radians), 0.0,
               0.0, 0.0, 0.0, 1.0);
+
+  if (rotate) {
+    m_model.multiply(m_y_rotation);
+  }
+  // console.log(rotate)
   
   for (let i = 0; i < vertices.length; ++i)
       vertices[i].applyMatrix4(m_model);
@@ -299,6 +331,37 @@ function displayRenderPipeline() {
     // }
 
 }
+  
+  displayPipelineRender();
 
-  const createClock = setInterval(displayRenderPipeline, 1000);
-  // const createClock = setInterval(displayRenderPipeline, 100);
+  function Cube() {
+    displayPipelineRender("cube");
+    actualForm = "cube";
+  }
+
+  function Pyramid() {
+    displayPipelineRender("pyramid");
+    actualForm = "pyramid";
+  }
+
+  function Triangle() {
+    displayPipelineRender("triangle");
+    actualForm = "triangle";
+  }
+
+  function Prism() {
+    displayPipelineRender("prism");
+    actualForm = "prism";
+  }
+
+  var createPipelineLoop;
+
+  function StartRotation() {
+    createPipelineLoop = setInterval(function () {
+      displayPipelineRender(actualForm, true);
+    }, 100);
+  }
+
+  function StopRotation() {
+    clearInterval(createPipelineLoop);
+  }
