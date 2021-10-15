@@ -3,6 +3,7 @@
 var initialTHETA = 0;
 var diff = 10;
 var actualForm = "cube";
+var sizePixelated = true;
 
 function changeTheta() {
   initialTHETA += diff; 
@@ -20,16 +21,20 @@ function changeTheta() {
   }
 }
 
-function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
+function displayPipelineRender(form="cube", rotate=false, pixelated=true) {
   changeTheta()
 
   // Cria um color buffer para armazenar a imagem final.
   let color_buffer = new Canvas("canvas");
   color_buffer.clear();
 
-  if (pixelated) {
+  if (!pixelated) {
     color_buffer.setWidth(512);
     color_buffer.setHeight(512);
+  }
+  else {
+    color_buffer.setWidth(128);
+    color_buffer.setHeight(128);
   }
   
   /******************************************************************************
@@ -155,8 +160,9 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
               0.0, 0.0, 0.0, 1.0);
 
   let theta = initialTHETA;
-  // console.log(theta)
+
   /******************************************************************************
+   * Transforma o ângulo em radianos.
    *   180° ------- π
    * angle  ------- x
    * x = ( angle * π ) / 180
@@ -170,10 +176,13 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
               -Math.sin(theta_radians), 0.0, Math.cos(theta_radians), 0.0,
               0.0, 0.0, 0.0, 1.0);
 
+  /******************************************************************************
+   * Aplica a matriz de rotação no Y na matriz identidade da modelagem, 
+   * se o botão StartRotateForm tiver sido pressionado.
+   *****************************************************************************/
   if (rotate) {
     m_model.multiply(m_y_rotation);
   }
-  // console.log(rotate)
   
   for (let i = 0; i < vertices.length; ++i)
       vertices[i].applyMatrix4(m_model);
@@ -190,7 +199,7 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
    * OBS: A matriz está carregada inicialmente com a identidade. 
    *****************************************************************************/
   
-    // Derivar os vetores da base da câmera a partir dos parâmetros informados acima. ✓
+    // Derivando os vetores da base da câmera a partir dos parâmetros informados acima.
   
     // ---------------------------- SETTING ZCAM --------------------------------
   
@@ -219,7 +228,7 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
   
     let y_cam = zcam_cross_xcam.clone().divideScalar(zcam_xcam_norm)
   
-    // Construir 'm_bt', a inversa da matriz de base da câmera.
+    // Constrói 'm_bt', a inversa da matriz de base da câmera.
   
     let m_bt = new THREE.Matrix4();
   
@@ -228,7 +237,7 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
              z_cam.getComponent(0), z_cam.getComponent(1), z_cam.getComponent(2), 0.0,
              0.0, 0.0, 0.0, 1.0);
   
-    // Construir a matriz 'm_t' de translação para tratar os casos em que as
+    // Constrói a matriz 'm_t' de translação para tratar os casos em que as
     // origens do espaço do universo e da câmera não coincidem.
   
     let origin = new THREE.Vector3(0.0, 0.0, 0.0); // vetor Origem no esp. do Universo.
@@ -334,36 +343,38 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
     //   const element = cameraBaseVectors[key];
     //   console.log(key, ":", element)
     // }
+  }
 
-}
-  
-  displayPipelineRender();
+  /******************************************************************************
+   * Ações dos botões utilizados no HTML 
+   *****************************************************************************/
 
   function Cube() {
-    displayPipelineRender("cube");
+    displayPipelineRender("cube", false, sizePixelated);
     actualForm = "cube";
   }
 
   function Pyramid() {
-    displayPipelineRender("pyramid");
+    displayPipelineRender("pyramid", false, sizePixelated);
     actualForm = "pyramid";
   }
 
   function Triangle() {
-    displayPipelineRender("triangle");
+    displayPipelineRender("triangle", false, sizePixelated);
     actualForm = "triangle";
   }
 
   function Prism() {
-    displayPipelineRender("prism");
+    displayPipelineRender("prism", false, sizePixelated);
     actualForm = "prism";
   }
 
   var createPipelineLoop;
 
   function StartRotation() {
+    StopRotation();
     createPipelineLoop = setInterval(function () {
-      displayPipelineRender(actualForm, true);
+      displayPipelineRender(actualForm, true, sizePixelated);
     }, 100);
   }
 
@@ -371,6 +382,18 @@ function displayPipelineRender(form="cube", rotate=false, pixelated=false) {
     clearInterval(createPipelineLoop);
   }
 
-  function RemovePixelated() {
-    displayPipelineRender(actualForm, false, true);
+  function ResizeCanvas() {
+    if (sizePixelated) {
+      sizePixelated = false;
+    }
+    else {
+      sizePixelated = true;
+    }
+    displayPipelineRender(actualForm, false, sizePixelated);
   }
+
+  /******************************************************************************
+   * Main
+   *****************************************************************************/
+
+    displayPipelineRender();
