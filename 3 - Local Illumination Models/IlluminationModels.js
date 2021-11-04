@@ -43,6 +43,8 @@ let rendering_uniforms = {
     k_s: {type: 'vec3', value: new THREE.Color(1, 1, 1)}
 }
 
+// const 
+
 //----------------------------------------------------------------------------
 // Criação do material na forma de um Vertex Shader e um Fragment Shader customizados.
 // Os shaders receberão valores da CPU (i.e. variáveis do tipo 'uniform') por meio da
