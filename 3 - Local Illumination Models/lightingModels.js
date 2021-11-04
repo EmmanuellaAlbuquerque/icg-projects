@@ -122,7 +122,7 @@ material.vertexShader = `
         //     Neste caso, a cor retornada é vermelho. Para a realização do exercício, o aluno deverá atribuir a 'I' o valor
         //     final gerado pelo modelo local de iluminação implementado.
         
-        I = vec4(1, 0, 0, 1); 
+        I = vec4(Ia * k_a + Ip_diffuse_color * k_d * dot(N_cam_spc, L_cam_spc) + Ip_diffuse_color * k_s * pow(dot(R_cam_spc, normal), 16.0), 1.0);
 
         // 'gl_Position' : variável de sistema que conterá a posição final do vértice transformado pelo Vertex Shader.
         
