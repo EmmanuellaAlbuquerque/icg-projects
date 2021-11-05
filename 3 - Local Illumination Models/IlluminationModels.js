@@ -59,14 +59,14 @@ let material = new THREE.ShaderMaterial({
   //----------------------------------------------------------------------------
   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Gouraud Shading =-=-=-=-=-=-=-=-=-=-=-=-=-=
   //----------------------------------------------------------------------------
-  vertexShader: Gouraud.vertexShader,
-  fragmentShader: Gouraud.fragmentShader,
+  // vertexShader: Gouraud.vertexShader,
+  // fragmentShader: Gouraud.fragmentShader,
 
   //----------------------------------------------------------------------------
   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Phong Shading =-=-=-=-=-=-=-=-=-=-=-=-=-=
   //----------------------------------------------------------------------------
-  // vertexShader: Phong.vertexShader,
-  // fragmentShader: Phong.fragmentShader
+  vertexShader: Phong.vertexShader,
+  fragmentShader: Phong.fragmentShader
 });
 
 // renderer.setClearColor(0xffffff);
