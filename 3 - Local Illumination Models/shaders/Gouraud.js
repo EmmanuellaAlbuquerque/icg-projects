@@ -1,12 +1,17 @@
+//----------------------------------------------------------------------------
+// =-=-=-=-=-=-=-=-= Phong Model using Gouraud Interpolation =-=-=-=-=-=-=-=-=
+//----------------------------------------------------------------------------
+
 const Gouraud = {
-  vertexShader: '',
-  fragmentShader: ''
+    vertexShader: '',
+    fragmentShader: ''
 };
 
 //----------------------------------------------------------------------------
 // =-=-=-=-=-=-=-=-=-=-=-=-=-= Gouraud Vertex Shader =-=-=-=-=-=-=-=-=-=-=-=-=
 //----------------------------------------------------------------------------
 Gouraud.vertexShader = /* glsl */ `
+
     // 'uniform' contendo informação sobre a fonte de luz ambiente.
     
     uniform vec3 Ia;
@@ -66,20 +71,11 @@ Gouraud.vertexShader = /* glsl */ `
         vec3 L_cam_spc = normalize(Ip_pos_cam_spc.xyz - P_cam_spc.xyz);
 
         // 'reflect()' : função do sistema que retorna 'R_cam_spc', isto é, o vetor 'L_cam_spc' refletido 
-        //     em relação o vetor 'N_cam_spc'.
+        // em relação o vetor 'N_cam_spc'.
         
         vec3 R_cam_spc = reflect(-L_cam_spc, N_cam_spc);
 
-        ///////////////////////////////////////////////////////////////////////////////
-        //
-        // Escreva aqui o seu código para implementar os modelos de iluminação com 
-        // Gouraud Shading (interpolação por vértice). 
-        //
-        ///////////////////////////////////////////////////////////////////////////////
-
         // 'I' : cor final (i.e. intensidade) do vértice.
-        //     Neste caso, a cor retornada é vermelho. Para a realização do exercício, o aluno deverá atribuir a 'I' o valor
-        //     final gerado pelo modelo local de iluminação implementado.
         
         vec3 ambient_term = Ia * k_a;
         vec3 diffuse_term = Ip_diffuse_color * k_d * max(0.0, dot(N_cam_spc, L_cam_spc));
@@ -90,13 +86,13 @@ Gouraud.vertexShader = /* glsl */ `
         // 'gl_Position' : variável de sistema que conterá a posição final do vértice transformado pelo Vertex Shader.
         
         gl_Position = projectionMatrix * P_cam_spc;
-    }
-    `;
+    }`;
 
 //----------------------------------------------------------------------------
 // =-=-=-=-=-=-=-=-=-=-=-=-= Gouraud Fragment Shader =-=-=-=-=-=-=-=-=-=-=-=-=
 //----------------------------------------------------------------------------
 Gouraud.fragmentShader = /* glsl */ `
+
     // 'I' : valor de cor originalmente calculada pelo Vertex Shader, e já interpolada para o fragmento corrente.
     
     varying vec4 I;
@@ -108,7 +104,6 @@ Gouraud.fragmentShader = /* glsl */ `
         // 'gl_FragColor' : variável de sistema que conterá a cor final do fragmento calculada pelo Fragment Shader.
         
         gl_FragColor = I;
-    }
-    `;
+    }`;
 
 export default Gouraud;
