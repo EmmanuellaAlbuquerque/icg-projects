@@ -29,7 +29,7 @@ Gouraud.vertexShader = /* glsl */ `
 
     // 'uniforms' contendo informação sobre o tamanho do brilho especular.
 
-    uniform float n;
+    uniform float n_expo;
 
     // 'I' : Variável que armazenará a cor final (i.e. intensidade) do vértice, após a avaliação do modelo local de iluminação.
     //     A variável 'I' é do tipo 'varying', ou seja, seu valor será calculado pelo Vertex Shader (por vértice)
@@ -56,9 +56,10 @@ Gouraud.vertexShader = /* glsl */ `
 
         // 'viewMatrix' : variável de sistema que contém a matriz View (4x4).
         // 'cameraPosition' : Posição da Câmera no Espaço do Universo.
+        // 'position_cam_spc' : Posição da Câmera no Espaço do Câmera. (vec4)
         
         vec4 position_cam_spc = viewMatrix * vec4(cameraPosition, 1.0);
-        vec3 V = normalize(position_cam_spc.xyz - P_cam_spc.xyz);
+        vec3 V_cam_spc = normalize(position_cam_spc.xyz - P_cam_spc.xyz);
 
         // 'normal' : variável de sistema que contém o vetor normal do vértice (vec3) no espaço do objeto.
         // 'normalMatrix' : variável de sistema que contém a matriz de normais (3x3) gerada a partir da matriz 'modelViewMatrix'.
@@ -75,11 +76,13 @@ Gouraud.vertexShader = /* glsl */ `
         
         vec3 R_cam_spc = reflect(-L_cam_spc, N_cam_spc);
 
-        // 'I' : cor final (i.e. intensidade) do vértice.
+        // Cálculo da iluminação por vértice.
         
         vec3 ambient_term = Ia * k_a;
         vec3 diffuse_term = Ip_diffuse_color * k_d * max(0.0, dot(N_cam_spc, L_cam_spc));
-        vec3 specular_term = Ip_diffuse_color * k_s * pow(max(0.0, dot(R_cam_spc, V)), n);
+        vec3 specular_term = Ip_diffuse_color * k_s * pow(max(0.0, dot(R_cam_spc, V_cam_spc)), n_expo);
+
+        // 'I' : cor final (i.e. intensidade) do vértice.
 
         I = vec4(ambient_term + diffuse_term + specular_term, 1.0);
 
@@ -94,6 +97,7 @@ Gouraud.vertexShader = /* glsl */ `
 Gouraud.fragmentShader = /* glsl */ `
 
     // 'I' : valor de cor originalmente calculada pelo Vertex Shader, e já interpolada para o fragmento corrente.
+    // i.e Interpolação das cores dos vértices.
     
     varying vec4 I;
 

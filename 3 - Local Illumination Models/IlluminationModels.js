@@ -45,7 +45,7 @@ let rendering_uniforms = {
   k_a: { type: 'vec3', value: new THREE.Color(0.25, 0.25, 0.85) },
   k_d: { type: 'vec3', value: new THREE.Color(0.25, 0.25, 0.85) },
   k_s: { type: 'vec3', value: new THREE.Color(1, 1, 1) },
-  n: { type: 'float', value: 16.0 }
+  n_expo: { type: 'float', value: 16.0 }
 }
 
 //----------------------------------------------------------------------------
@@ -59,14 +59,14 @@ let material = new THREE.ShaderMaterial({
   //----------------------------------------------------------------------------
   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Gouraud Shading =-=-=-=-=-=-=-=-=-=-=-=-=-=
   //----------------------------------------------------------------------------
-  // vertexShader: Gouraud.vertexShader,
-  // fragmentShader: Gouraud.fragmentShader,
+  vertexShader: Gouraud.vertexShader,
+  fragmentShader: Gouraud.fragmentShader,
 
   //----------------------------------------------------------------------------
   // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Phong Shading =-=-=-=-=-=-=-=-=-=-=-=-=-=
   //----------------------------------------------------------------------------
-  vertexShader: Phong.vertexShader,
-  fragmentShader: Phong.fragmentShader
+  // vertexShader: Phong.vertexShader,
+  // fragmentShader: Phong.fragmentShader
 });
 
 // renderer.setClearColor(0xffffff);
