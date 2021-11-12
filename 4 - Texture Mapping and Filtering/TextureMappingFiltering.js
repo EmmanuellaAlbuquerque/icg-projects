@@ -1,13 +1,25 @@
 let image = new Image();
-image.src = src_gate; // textura do portão do Doom
-//image.src = src_checkerboard; // texture do padrão xadrez
+//image.src = src_gate; // textura do portão do Doom
+image.src = src_checkerboard; // texture do padrão xadrez
 
 texture = new THREE.Texture(image);
 
+let filters = {
+  // Para Magnificação
+  Bilinear: THREE.LinearFilter,
+
+  // Para Minificação
+  Mipmapping: THREE.LinearMipmapLinearFilter,
+  // Anisotropy:
+
+  // Para Ambos
+  NearestNeighbor: THREE.NearestFilter,
+};
+
 image.onload = function () {
   texture.needsUpdate = true;
-  texture.magFilter = THREE.NearestFilter; // filtro a ser utilizado em caso de magnificação.
-  texture.minFilter = THREE.NearestFilter; // filtro a ser utilizado em caso de minificação.
+  texture.magFilter = filters.NearestNeighbor; // filtro a ser utilizado em caso de magnificação.
+  texture.minFilter = filters.Mipmapping; // filtro a ser utilizado em caso de minificação.
   texture.anisotropy = 1; // fator máximo de anisotropia para o filtro anisotrópico.
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
