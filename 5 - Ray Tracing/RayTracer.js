@@ -132,6 +132,52 @@ class Esfera {
   }
 }
 
+class Triangulo {
+  constructor(v0, v1, v2) {
+    this.v0 = v0;
+    this.v1 = v1;
+    this.v2 = v2;
+  }
+
+  // MOLLER TRUMBORE
+  // Fast, Minimum Storage Ray/Triangle Intersectio
+  interseccionar(raio, interseccao) {
+    let kEpsilon = 0.00000001;
+    let dir = raio.direcao.clone();
+    let orig = raio.origem.clone();
+
+    let v0v1 = this.v1.clone().sub(this.v0);
+    let v0v2 = this.v2.clone().sub(this.v0);
+
+    let pvec = dir.clone().cross(v0v2);
+    let det = v0v1.clone().dot(pvec);
+
+    if (det > - kEpsilon && det < kEpsilon) return false;
+
+    let invDet = 1.0 / det;
+
+    let tvec = orig.clone().sub(this.v0);
+
+    let u = tvec.clone().dot(pvec) * invDet;
+
+    if (u < 0.0 || u > 1.0) return false;
+
+    let qvec = tvec.clone().cross(v0v1);
+
+    let v = dir.clone().dot(qvec) * invDet;
+
+    if (v < 0.0 || u + v > 1.0) return false;
+
+    let t = v0v2.clone().dot(qvec) * invDet;
+
+    interseccao.t = t;
+    interseccao.posicao = orig.clone().add(dir.clone().multiplyScalar(interseccao.t));
+    interseccao.normal = (interseccao.posicao.clone().sub(this.v0)).normalize();
+
+    return true;
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Classe que representa uma fonte de luz pontual.
 // Construtor: 
@@ -154,7 +200,14 @@ class Luz {
 ///////////////////////////////////////////////////////////////////////////////
 function Render() {
   let camera = new Camera();
+
   let s1 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+
+  let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
+  let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
+  let v2 = new THREE.Vector3(-0.75, -1.0, -2.5);
+  let triangle1 = new Triangulo(v0, v1, v2);
+
   let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
@@ -164,7 +217,7 @@ function Render() {
       let raio = camera.raio(x, y); // Construcao do raio primario que passa pelo centro do pixel de coordenadas (x,y).
       let interseccao = new Interseccao();
 
-      if (s1.interseccionar(raio, interseccao)) { // Se houver interseccao entao...
+      if (triangle1.interseccionar(raio, interseccao)) { // Se houver interseccao entao...
 
         let ka = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia ambiente da esfera.
         let kd = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia difusa da esfera.
