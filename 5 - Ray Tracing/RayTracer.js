@@ -76,7 +76,7 @@ class Camera {
 ///////////////////////////////////////////////////////////////////////////////
 class Interseccao {
   constructor() {
-    this.t = Infinity; // distancia entre a origem do rio e o ponto de intersecao.
+    this.t = Infinity; // distancia entre a origem do raio e o ponto de intersecao.
     this.posicao = new THREE.Vector3(0.0, 0.0, 0.0); // Coordenadas do ponto de interseccao.
     this.normal = new THREE.Vector3(0.0, 0.0, 0.0);  // Vetor normal no ponto de interseccao.
   }
@@ -168,16 +168,28 @@ function Render() {
 
         let ka = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia ambiente da esfera.
         let kd = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia difusa da esfera.
-        let Ia = new THREE.Vector3(0.2, 0.2, 0.2);  // Intensidade da luz ambiente. 
+        let ks = new THREE.Vector3(1.0, 1.0, 1.0);  // Coeficiente de reflectância especular da esfera.
+        let Ia = new THREE.Vector3(0.2, 0.2, 0.2);  // Intensidade da luz ambiente.
+        let n = 32; // Tamanho do brilho especular da esfera.
 
-        let termo_ambiente = Ia.clone().multiply(ka); // Calculo do termo ambiente do modelo local de iluminacao.
+        // Calculo do termo ambiente do modelo local de iluminacao.
+        let termo_ambiente = Ia.clone().multiply(ka);
 
         let L = (Ip.posicao.clone().sub(interseccao.posicao)).normalize(); // Vetor que aponta para a fonte e luz pontual.
 
         // Calculo do termo difuso do modelo local de iluminacao.
         let termo_difuso = (Ip.cor.clone().multiply(kd)).multiplyScalar(Math.max(0.0, interseccao.normal.dot(L)));
 
-        PutPixel(x, y, termo_difuso.add(termo_ambiente)); // Combina os termos difuso e ambiente e pinta o pixel.
+        let R = L.clone().reflect(interseccao.normal); // Vetor normalizado que representa a reflexão de l em relação à n.
+        let V = interseccao.posicao.clone().normalize(); // Vetor normalizado que aponta para a câmera.
+
+        // Calculo do termo especular do modelo local de iluminacao.
+        let termo_especular = (Ip.cor.clone().multiply(ks)).multiplyScalar(Math.pow(Math.max(0.0, R.dot(V)), n));
+
+        // Intensidade (cor) final do pixel, após a avaliação do modelo local de iluminação.
+        let I = termo_ambiente.add(termo_difuso).add(termo_especular);
+
+        PutPixel(x, y, I); // Combina os termos difuso e ambiente e pinta o pixel.
       } else // Senao houver interseccao entao...
         PutPixel(x, y, new THREE.Vector3(0.0, 0.0, 0.0)); // Pinta o pixel com a cor de fundo.
     }
