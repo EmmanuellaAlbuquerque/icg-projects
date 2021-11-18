@@ -85,13 +85,27 @@ class Interseccao {
 ///////////////////////////////////////////////////////////////////////////////
 // Classe que representa uma primitiva do tipo esfera.
 // Construtor: 
-//   centro: Coordenadas do centro da esfera no espaco do universo (THREE.Vector3).
-//   raio: Raio da esfera.
+//   centro(THREE.Vector3): Coordenadas do centro da esfera no espaco do universo.
+//   raio(float): Raio da esfera.
 ///////////////////////////////////////////////////////////////////////////////
 class Esfera {
   constructor(centro, raio) {
     this.centro = centro;
     this.raio = raio;
+
+    // -------------------------- Propriedades da Esfera --------------------------
+
+    // ka: Coeficiente de reflectancia ambiente da esfera.
+    this.ka = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // kd: Coeficiente de reflectancia difusa da esfera.
+    this.kd = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // ks: Coeficiente de reflectância especular da esfera.
+    this.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // n: Tamanho do brilho especular da esfera.
+    this.n = 0;
   }
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -132,21 +146,37 @@ class Esfera {
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Classe que representa uma primitiva do tipo triangulo.
+// Construtor: 
+//   v0(THREE.Vector3): Coordenada do vertice A do triangulo.
+//   v1(THREE.Vector3): Coordenada do vertice B do triangulo.
+//   v2(THREE.Vector3): Coordenada do vertice C do triangulo.
+///////////////////////////////////////////////////////////////////////////////
 class Triangulo {
   constructor(v0, v1, v2) {
     this.v0 = v0;
     this.v1 = v1;
     this.v2 = v2;
-  }
 
-  interseccionar(raio, interseccao) {
-    return this.interseccionarMollerTrumbore(raio, interseccao);
-    // return this.interseccionarGeometricMethod(raio, interseccao);
+    // -------------------------- Propriedades do Triangulo --------------------------
+
+    // ka: Coeficiente de reflectancia ambiente do triangulo.
+    this.ka = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // kd: Coeficiente de reflectancia difusa do triangulo.
+    this.kd = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // ks: Coeficiente de reflectância especular do triangulo.
+    this.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+
+    // n: Tamanho do brilho especular do triangulo.
+    this.n = 0;
   }
 
   // MOLLER TRUMBORE
   // Fast, Minimum Storage Ray/Triangle Intersectio
-  interseccionarMollerTrumbore(raio, interseccao) {
+  interseccionar(raio, interseccao) {
     let kEpsilon = 0.00000001;
     let dir = raio.direcao.clone();
     let orig = raio.origem.clone();
@@ -157,7 +187,7 @@ class Triangulo {
     let pvec = dir.clone().cross(v0v2);
     let det = v0v1.clone().dot(pvec);
 
-    if (det > - kEpsilon && det < kEpsilon) return false;
+    if (det > - kEpsilon && det < kEpsilon) false;
 
     let invDet = 1.0 / det;
 
@@ -186,67 +216,6 @@ class Triangulo {
 
     return true;
   }
-
-  interseccionarGeometricMethod(raio, interseccao) {
-    let kEpsilon = 0.00000001;
-
-    // compute plane's normal
-    let v0v1 = this.v1.clone().sub(this.v0);
-    let v0v2 = this.v2.clone().sub(this.v0);
-    // no need to normalize
-    let N = v0v1.clone().cross(v0v2); // N 
-    let denom = N.clone().dot(N);
-
-    // Step 1: finding P
-
-    // check if ray and plane are parallel ?
-    let NdotRayDirection = N.clone().dot(raio.direcao);
-    if (Math.abs(NdotRayDirection) < kEpsilon) // almost 0 
-      return false; // they are parallel so they don't intersect ! 
-
-    // compute d parameter using equation 2
-    let d = N.clone().dot(this.v0);
-
-    // compute t (equation 3)
-    let t = (N.clone().dot(raio.origem) + d) / NdotRayDirection;
-    // check if the triangle is in behind the ray
-    if (t < 0) return false; // the triangle is behind 
-
-    // compute the intersection point using equation 1
-    let P = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(t));
-
-    // Step 2: inside-outside test
-    let C; // vector perpendicular to triangle's plane 
-
-    // edge 0
-    let edge0 = this.v1.clone().sub(this.v0);
-    let vp0 = P.clone().sub(this.v0);
-    C = edge0.clone().cross(vp0);
-    if (N.clone().dot(C) < 0) return false; // P is on the right side 
-
-    // edge 1
-    let edge1 = this.v2.clone().sub(this.v1);
-    let vp1 = P.clone().sub(this.v1);
-    C = edge1.clone().cross(vp1);
-    let u = N.clone().dot(C)
-    if (u < 0) return false; // P is on the right side 
-
-    // edge 2
-    let edge2 = this.v0.clone().sub(this.v2);
-    let vp2 = P.clone().sub(this.v2);
-    C = edge2.clone().cross(vp2);
-    let v = N.clone().dot(C);
-    if (v < 0) return false; // P is on the right side; 
-
-    u /= denom;
-    v /= denom;
-
-    interseccao.t = t;
-    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
-    interseccao.normal = (interseccao.posicao.clone().sub(this.v0)).normalize();
-
-    return true; // this ray hits the triangle 
-  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -272,17 +241,41 @@ class Luz {
 function Render() {
   let camera = new Camera();
 
-  let s1 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+  let geometries = [];
+
+  // Esfera Vermelha
+  let sphere1 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+  sphere1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere1.n = 32;
+  geometries.push(sphere1);
 
   // let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
   // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
   // let v2 = new THREE.Vector3(-0.75, -1.0, -2.5);
 
-  let v0 = new THREE.Vector3(1.0, -1.0, -3.5);
-  let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
-  let v2 = new THREE.Vector3(-0.75, -1.0, -4.5);
-  let triangle1 = new Triangulo(v0, v1, v2);
+  // let v0 = new THREE.Vector3(1.0, -1.0, -3.5);
+  // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
+  // let v2 = new THREE.Vector3(-0.75, -1.0, -4.5);
 
+  // let cols0 = new THREE.Vector3(0.6, 0.4, 0.1);
+  // let cols1 = new THREE.Vector3(0.1, 0.5, 0.3);
+  // let cols2 = new THREE.Vector3(0.1, 0.3, 0.7);
+
+  let v0 = new THREE.Vector3(0.6, 0.4, 0.1);
+  let v1 = new THREE.Vector3(0.1, 0.5, 0.3);
+  let v2 = new THREE.Vector3(0.1, 0.3, 0.7);
+
+  // let v0 = new THREE.Vector3(-1, -1, -5);
+  // let v1 = new THREE.Vector3(1, -1, -5);
+  // let v2 = new THREE.Vector3(0, 1, -5);
+
+  let triangle1 = new Triangulo(v0, v1, v2);
+  geometries.push(triangle1);
+  geometries.push(sphere1);
+
+  // Intensidade da luz pontual/direcional.
   let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
@@ -292,37 +285,42 @@ function Render() {
       let raio = camera.raio(x, y); // Construcao do raio primario que passa pelo centro do pixel de coordenadas (x,y).
       let interseccao = new Interseccao();
 
-      if (triangle1.interseccionar(raio, interseccao)) { // Se houver interseccao entao...
+      // Realiza o calculo da interseccao para cada geometria. 
+      geometries.forEach(geometry => {
 
-        let ka = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia ambiente da esfera.
-        let kd = new THREE.Vector3(1.0, 0.0, 0.0);  // Coeficiente de reflectancia difusa da esfera.
-        let ks = new THREE.Vector3(1.0, 1.0, 1.0);  // Coeficiente de reflectância especular da esfera.
-        let Ia = new THREE.Vector3(0.2, 0.2, 0.2);  // Intensidade da luz ambiente.
-        let n = 32; // Tamanho do brilho especular da esfera.
+        if (geometry.interseccionar(raio, interseccao)) { // Se houver interseccao entao...
 
-        // Calculo do termo ambiente do modelo local de iluminacao.
-        let termo_ambiente = Ia.clone().multiply(ka);
+          let Ia = new THREE.Vector3(0.2, 0.2, 0.2);  // Intensidade da luz ambiente.
 
-        let L = (Ip.posicao.clone().sub(interseccao.posicao)).normalize(); // Vetor que aponta para a fonte e luz pontual.
+          // Calculo do termo ambiente do modelo local de iluminacao.
+          let termo_ambiente = Ia.clone().multiply(geometry.ka);
 
-        // Calculo do termo difuso do modelo local de iluminacao.
-        let termo_difuso = (Ip.cor.clone().multiply(kd)).multiplyScalar(Math.max(0.0, interseccao.normal.dot(L)));
+          let L = (Ip.posicao.clone().sub(interseccao.posicao)).normalize(); // Vetor que aponta para a fonte e luz pontual.
 
-        let R = L.clone().reflect(interseccao.normal); // Vetor normalizado que representa a reflexão de l em relação à n.
-        let V = interseccao.posicao.clone().normalize(); // Vetor normalizado que aponta para a câmera.
+          // Calculo do termo difuso do modelo local de iluminacao.
+          let termo_difuso = (Ip.cor.clone().multiply(geometry.kd)).multiplyScalar(Math.max(0.0, interseccao.normal.dot(L)));
 
-        // Calculo do termo especular do modelo local de iluminacao.
-        let termo_especular = (Ip.cor.clone().multiply(ks)).multiplyScalar(Math.pow(Math.max(0.0, R.dot(V)), n));
+          let R = L.clone().reflect(interseccao.normal); // Vetor normalizado que representa a reflexão de l em relação à n.
+          let V = interseccao.posicao.clone().normalize(); // Vetor normalizado que aponta para a câmera.
 
-        // Intensidade (cor) final do pixel, após a avaliação do modelo local de iluminação.
-        let I = termo_ambiente.add(termo_difuso).add(termo_especular);
+          // Calculo do termo especular do modelo local de iluminacao.
+          let termo_especular = (Ip.cor.clone().multiply(geometry.ks)).multiplyScalar(Math.pow(Math.max(0.0, R.dot(V)), geometry.n));
 
-        PutPixel(x, y, I); // Combina os termos difuso e ambiente e pinta o pixel.
+          // Intensidade (cor) final do pixel, após a avaliação do modelo local de iluminação.
+          let I = termo_ambiente.add(termo_difuso).add(termo_especular);
 
-      } else // Senao houver interseccao entao...
+          // Interpolate colors using the row barycentric coordinates.
+          // I = new THREE.Vector3(u, v, 1 - u - v);
 
-        PutPixel(x, y, new THREE.Vector3(0.0, 0.0, 0.0)); // Pinta o pixel com a cor de fundo.
+          PutPixel(x, y, I); // Combina os termos difuso e ambiente e pinta o pixel.
 
+        }
+        // else { // Senao houver interseccao entao...
+
+        //   PutPixel(x, y, new THREE.Vector3(0.0, 0.0, 0.0)); // Pinta o pixel com a cor de fundo.
+
+        // }
+      });
     }
   }
 }
