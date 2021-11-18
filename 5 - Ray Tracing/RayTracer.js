@@ -139,9 +139,14 @@ class Triangulo {
     this.v2 = v2;
   }
 
+  interseccionar(raio, interseccao) {
+    return this.interseccionarMollerTrumbore(raio, interseccao);
+    // return this.interseccionarGeometricMethod(raio, interseccao);
+  }
+
   // MOLLER TRUMBORE
   // Fast, Minimum Storage Ray/Triangle Intersectio
-  interseccionar(raio, interseccao) {
+  interseccionarMollerTrumbore(raio, interseccao) {
     let kEpsilon = 0.00000001;
     let dir = raio.direcao.clone();
     let orig = raio.origem.clone();
@@ -170,11 +175,77 @@ class Triangulo {
 
     let t = v0v2.clone().dot(qvec) * invDet;
 
+    let xg = (this.v0.x + this.v1.x + this.v2.x) / 3;
+    let yg = (this.v0.y + this.v1.y + this.v2.y) / 3;
+    let zg = (this.v0.z + this.v1.z + this.v2.z) / 3;
+    let baricentro = new THREE.Vector3(xg, yg, zg);
+
     interseccao.t = t;
     interseccao.posicao = orig.clone().add(dir.clone().multiplyScalar(interseccao.t));
     interseccao.normal = (interseccao.posicao.clone().sub(this.v0)).normalize();
 
     return true;
+  }
+
+  interseccionarGeometricMethod(raio, interseccao) {
+    let kEpsilon = 0.00000001;
+
+    // compute plane's normal
+    let v0v1 = this.v1.clone().sub(this.v0);
+    let v0v2 = this.v2.clone().sub(this.v0);
+    // no need to normalize
+    let N = v0v1.clone().cross(v0v2); // N 
+    let denom = N.clone().dot(N);
+
+    // Step 1: finding P
+
+    // check if ray and plane are parallel ?
+    let NdotRayDirection = N.clone().dot(raio.direcao);
+    if (Math.abs(NdotRayDirection) < kEpsilon) // almost 0 
+      return false; // they are parallel so they don't intersect ! 
+
+    // compute d parameter using equation 2
+    let d = N.clone().dot(this.v0);
+
+    // compute t (equation 3)
+    let t = (N.clone().dot(raio.origem) + d) / NdotRayDirection;
+    // check if the triangle is in behind the ray
+    if (t < 0) return false; // the triangle is behind 
+
+    // compute the intersection point using equation 1
+    let P = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(t));
+
+    // Step 2: inside-outside test
+    let C; // vector perpendicular to triangle's plane 
+
+    // edge 0
+    let edge0 = this.v1.clone().sub(this.v0);
+    let vp0 = P.clone().sub(this.v0);
+    C = edge0.clone().cross(vp0);
+    if (N.clone().dot(C) < 0) return false; // P is on the right side 
+
+    // edge 1
+    let edge1 = this.v2.clone().sub(this.v1);
+    let vp1 = P.clone().sub(this.v1);
+    C = edge1.clone().cross(vp1);
+    let u = N.clone().dot(C)
+    if (u < 0) return false; // P is on the right side 
+
+    // edge 2
+    let edge2 = this.v0.clone().sub(this.v2);
+    let vp2 = P.clone().sub(this.v2);
+    C = edge2.clone().cross(vp2);
+    let v = N.clone().dot(C);
+    if (v < 0) return false; // P is on the right side; 
+
+    u /= denom;
+    v /= denom;
+
+    interseccao.t = t;
+    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
+    interseccao.normal = (interseccao.posicao.clone().sub(this.v0)).normalize();
+
+    return true; // this ray hits the triangle 
   }
 }
 
@@ -203,15 +274,19 @@ function Render() {
 
   let s1 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
 
-  let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
+  // let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
+  // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
+  // let v2 = new THREE.Vector3(-0.75, -1.0, -2.5);
+
+  let v0 = new THREE.Vector3(1.0, -1.0, -3.5);
   let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
-  let v2 = new THREE.Vector3(-0.75, -1.0, -2.5);
+  let v2 = new THREE.Vector3(-0.75, -1.0, -4.5);
   let triangle1 = new Triangulo(v0, v1, v2);
 
   let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
-  for (let y = 0; y < 512; ++y)
+  for (let y = 0; y < 512; ++y) {
     for (let x = 0; x < 512; ++x) {
 
       let raio = camera.raio(x, y); // Construcao do raio primario que passa pelo centro do pixel de coordenadas (x,y).
@@ -243,9 +318,13 @@ function Render() {
         let I = termo_ambiente.add(termo_difuso).add(termo_especular);
 
         PutPixel(x, y, I); // Combina os termos difuso e ambiente e pinta o pixel.
+
       } else // Senao houver interseccao entao...
+
         PutPixel(x, y, new THREE.Vector3(0.0, 0.0, 0.0)); // Pinta o pixel com a cor de fundo.
+
     }
+  }
 }
 
 Render(); // Invoca o ray tracer.
