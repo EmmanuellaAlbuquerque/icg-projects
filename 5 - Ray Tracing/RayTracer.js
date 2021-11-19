@@ -16,6 +16,18 @@ function PutPixel(x, y, color) {
   ctx.fillRect(x, y, 1, 2);
 }
 
+function drawReferenceLine(x0, y0, x1, y1) {
+  let c = document.getElementById("canvas");
+  let ctx = c.getContext("2d");
+  ctx.beginPath();
+  ctx.moveTo(x0, y0);
+  ctx.lineTo(x1, y1);
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "#fff";
+  ctx.stroke();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Classe que representa um raio de luz.
 // Construtor: 
@@ -178,20 +190,18 @@ class Triangulo {
   // Fast, Minimum Storage Ray/Triangle Intersectio
   interseccionar(raio, interseccao) {
     let kEpsilon = 0.00000001;
-    let dir = raio.direcao.clone();
-    let orig = raio.origem.clone();
 
     let v0v1 = this.v1.clone().sub(this.v0);
     let v0v2 = this.v2.clone().sub(this.v0);
 
-    let pvec = dir.clone().cross(v0v2);
+    let pvec = raio.direcao.clone().cross(v0v2);
     let det = v0v1.clone().dot(pvec);
 
     if (det > - kEpsilon && det < kEpsilon) false;
 
     let invDet = 1.0 / det;
 
-    let tvec = orig.clone().sub(this.v0);
+    let tvec = raio.origem.clone().sub(this.v0);
 
     let u = tvec.clone().dot(pvec) * invDet;
 
@@ -199,7 +209,7 @@ class Triangulo {
 
     let qvec = tvec.clone().cross(v0v1);
 
-    let v = dir.clone().dot(qvec) * invDet;
+    let v = raio.direcao.clone().dot(qvec) * invDet;
 
     if (v < 0.0 || u + v > 1.0) return false;
 
@@ -211,8 +221,10 @@ class Triangulo {
     let baricentro = new THREE.Vector3(xg, yg, zg);
 
     interseccao.t = t;
-    interseccao.posicao = orig.clone().add(dir.clone().multiplyScalar(interseccao.t));
-    interseccao.normal = (interseccao.posicao.clone().sub(this.v0)).normalize();
+    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
+    interseccao.normal = v0v1.cross(v0v2).normalize();
+    // interseccao.normal = interseccao.posicao.multiplyScalar(-1).normalize();
+    // interseccao.normal = baricentro.multiplyScalar(-1).normalize();
 
     return true;
   }
@@ -249,7 +261,23 @@ function Render() {
   sphere1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   sphere1.n = 32;
-  geometries.push(sphere1);
+  // geometries.push(sphere1);
+
+  // rgba(239,8,20,255)
+  let sphere2 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+  sphere2.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  sphere2.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere2.n = 32;
+  geometries.push(sphere2);
+
+
+  // let sphere2 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+  // sphere2.ka = new THREE.Vector3(208 / 255, 6 / 255.0, 255 / 255);
+  // sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  // sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // sphere2.n = 32;
+  // geometries.push(sphere2);
 
   // let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
   // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
@@ -259,24 +287,76 @@ function Render() {
   // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
   // let v2 = new THREE.Vector3(-0.75, -1.0, -4.5);
 
+  // let v0 = new THREE.Vector3(2.0, -2.0, -5.5);
+  // let v1 = new THREE.Vector3(2.0, 2.0, -5.0);
+  // let v2 = new THREE.Vector3(-2.75, -2.0, -6.5);
+
+  // let v0 = new THREE.Vector3(7.0, -7.0, -10.5);
+  // let v1 = new THREE.Vector3(7.0, 7.0, -10.0);
+  // let v2 = new THREE.Vector3(-7.75, -7.0, -11.5);
+
   // let cols0 = new THREE.Vector3(0.6, 0.4, 0.1);
   // let cols1 = new THREE.Vector3(0.1, 0.5, 0.3);
   // let cols2 = new THREE.Vector3(0.1, 0.3, 0.7);
 
-  let v0 = new THREE.Vector3(0.6, 0.4, 0.1);
-  let v1 = new THREE.Vector3(0.1, 0.5, 0.3);
-  let v2 = new THREE.Vector3(0.1, 0.3, 0.7);
+  // let v0 = new THREE.Vector3(0.9, 0.4, 0.1);
+  // let v1 = new THREE.Vector3(0.1, 0.5, 0.3);
+  // let v2 = new THREE.Vector3(-0.1, -0.4, 0.9);
 
   // let v0 = new THREE.Vector3(-1, -1, -5);
   // let v1 = new THREE.Vector3(1, -1, -5);
   // let v2 = new THREE.Vector3(0, 1, -5);
 
-  let triangle1 = new Triangulo(v0, v1, v2);
-  geometries.push(triangle1);
-  geometries.push(sphere1);
+  // let v0 = new THREE.Vector3(-4, -4, -5);
+  // let v1 = new THREE.Vector3(4, -4, -5);
+  // let v2 = new THREE.Vector3(0, 4, -5);
+
+  // let v0 = new THREE.Vector3(0, 0, -5);
+  // let v1 = new THREE.Vector3(1, -1, -5);
+  // let v2 = new THREE.Vector3(0, 0, -5);
+
+  // let v0 = new THREE.Vector3(0, 0, -5);
+  // let v1 = new THREE.Vector3(-5, 1, -5);
+  // let v2 = new THREE.Vector3(0, 1, -5);
+
+  let triangle1 = new Triangulo(
+    new THREE.Vector3(1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(-0.75, -1.0, -4.5));
+  triangle1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  triangle1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  triangle1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  triangle1.n = 32;
+  // geometries.push(triangle1);
+
+  let triangle2 = new Triangulo(
+    new THREE.Vector3(2.0, -2.0, -5.5),
+    new THREE.Vector3(2.0, 2.0, -5.0),
+    new THREE.Vector3(-2.75, -2.0, -6.5));
+  triangle2.ka = new THREE.Vector3(0.0, 1.0, 0.0);
+  triangle2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  triangle2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  triangle2.n = 32;
+  // geometries.push(triangle2);
+
+  let triangle3 = new Triangulo(
+    new THREE.Vector3(1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(-0.75, -1.0, -4.5));
+  triangle3.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  triangle3.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  triangle3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  triangle3.n = 32;
+  // geometries.push(triangle3);
 
   // Intensidade da luz pontual/direcional.
   let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-5.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(0.0, 2.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-1.0, -1.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
   for (let y = 0; y < 512; ++y) {
