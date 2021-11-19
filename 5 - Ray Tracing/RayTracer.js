@@ -256,20 +256,48 @@ function Render() {
   let geometries = [];
 
   // Esfera Vermelha
-  let sphere1 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
+  let sphere1 = new Esfera(new THREE.Vector3(1.5, 0.0, -3.0), 1.0);
   sphere1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   sphere1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   sphere1.n = 32;
-  // geometries.push(sphere1);
+  geometries.push(sphere1);
 
-  // rgba(239,8,20,255)
-  let sphere2 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
-  sphere2.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  sphere2.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  let sphere2 = new Esfera(new THREE.Vector3(-0.2, -0.5, -3.0), 0.5);
+  sphere2.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   sphere2.n = 32;
   geometries.push(sphere2);
+
+  let sphere3 = new Esfera(new THREE.Vector3(-1.2, -0.75, -3.0), 0.25);
+  sphere3.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere3.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere3.n = 32;
+  geometries.push(sphere3);
+
+  let sphere4 = new Esfera(new THREE.Vector3(-2.0, -0.875, -3.0), 0.125);
+  sphere4.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere4.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere4.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere4.n = 32;
+  geometries.push(sphere4);
+
+  let sphere5 = new Esfera(new THREE.Vector3(-2.5, -0.9375, -3.0), 0.125 / 2);
+  sphere5.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere5.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere5.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere5.n = 32;
+  geometries.push(sphere5);
+
+  // rgba(239,8,20,255)
+  // let sphere2 = new Esfera(new THREE.Vector3(-0.2, -0.5, -3.0), 0.5);
+  // sphere2.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  // sphere2.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  // sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // sphere2.n = 32;
+  // geometries.push(sphere2);
 
 
   // let sphere2 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
