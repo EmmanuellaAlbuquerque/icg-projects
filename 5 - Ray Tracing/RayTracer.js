@@ -28,6 +28,9 @@ function drawReferenceLine(x0, y0, x1, y1) {
   ctx.stroke();
 }
 
+// drawReferenceLine(0, 512 / 2, 512, 512 / 2);
+// drawReferenceLine(512 / 2, 0, 512 / 2, 512);
+
 ///////////////////////////////////////////////////////////////////////////////
 // Classe que representa um raio de luz.
 // Construtor: 
@@ -246,145 +249,23 @@ class Luz {
 ///////////////////////////////////////////////////////////////////////////////
 // Funcao que renderiza a cena utilizando ray tracing.
 // Entrada: 
-//  Sem entradas.
+//  geometries(Array): Array das geometrias a serem renderizadas na cena.
 // Retorno:
 //   Sem retorno.
 ///////////////////////////////////////////////////////////////////////////////
-function Render() {
+function Render(geometries) {
   let camera = new Camera();
 
-  let geometries = [];
-
-  // Esfera Vermelha
-  let sphere1 = new Esfera(new THREE.Vector3(1.5, 0.0, -3.0), 1.0);
-  sphere1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  sphere1.n = 32;
-  geometries.push(sphere1);
-
-  let sphere2 = new Esfera(new THREE.Vector3(-0.2, -0.5, -3.0), 0.5);
-  sphere2.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  sphere2.n = 32;
-  geometries.push(sphere2);
-
-  let sphere3 = new Esfera(new THREE.Vector3(-1.2, -0.75, -3.0), 0.25);
-  sphere3.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere3.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  sphere3.n = 32;
-  geometries.push(sphere3);
-
-  let sphere4 = new Esfera(new THREE.Vector3(-2.0, -0.875, -3.0), 0.125);
-  sphere4.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere4.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere4.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  sphere4.n = 32;
-  geometries.push(sphere4);
-
-  let sphere5 = new Esfera(new THREE.Vector3(-2.5, -0.9375, -3.0), 0.125 / 2);
-  sphere5.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere5.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  sphere5.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  sphere5.n = 32;
-  geometries.push(sphere5);
-
-  // rgba(239,8,20,255)
-  // let sphere2 = new Esfera(new THREE.Vector3(-0.2, -0.5, -3.0), 0.5);
-  // sphere2.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  // sphere2.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  // sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // sphere2.n = 32;
-  // geometries.push(sphere2);
-
-
-  // let sphere2 = new Esfera(new THREE.Vector3(0.0, 0.0, -3.0), 1.0);
-  // sphere2.ka = new THREE.Vector3(208 / 255, 6 / 255.0, 255 / 255);
-  // sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  // sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // sphere2.n = 32;
-  // geometries.push(sphere2);
-
-  // let v0 = new THREE.Vector3(-1.0, -1.0, -3.5);
-  // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
-  // let v2 = new THREE.Vector3(-0.75, -1.0, -2.5);
-
-  // let v0 = new THREE.Vector3(1.0, -1.0, -3.5);
-  // let v1 = new THREE.Vector3(1.0, 1.0, -3.0);
-  // let v2 = new THREE.Vector3(-0.75, -1.0, -4.5);
-
-  // let v0 = new THREE.Vector3(2.0, -2.0, -5.5);
-  // let v1 = new THREE.Vector3(2.0, 2.0, -5.0);
-  // let v2 = new THREE.Vector3(-2.75, -2.0, -6.5);
-
-  // let v0 = new THREE.Vector3(7.0, -7.0, -10.5);
-  // let v1 = new THREE.Vector3(7.0, 7.0, -10.0);
-  // let v2 = new THREE.Vector3(-7.75, -7.0, -11.5);
-
-  // let cols0 = new THREE.Vector3(0.6, 0.4, 0.1);
-  // let cols1 = new THREE.Vector3(0.1, 0.5, 0.3);
-  // let cols2 = new THREE.Vector3(0.1, 0.3, 0.7);
-
-  // let v0 = new THREE.Vector3(0.9, 0.4, 0.1);
-  // let v1 = new THREE.Vector3(0.1, 0.5, 0.3);
-  // let v2 = new THREE.Vector3(-0.1, -0.4, 0.9);
-
-  // let v0 = new THREE.Vector3(-1, -1, -5);
-  // let v1 = new THREE.Vector3(1, -1, -5);
-  // let v2 = new THREE.Vector3(0, 1, -5);
-
-  // let v0 = new THREE.Vector3(-4, -4, -5);
-  // let v1 = new THREE.Vector3(4, -4, -5);
-  // let v2 = new THREE.Vector3(0, 4, -5);
-
-  // let v0 = new THREE.Vector3(0, 0, -5);
-  // let v1 = new THREE.Vector3(1, -1, -5);
-  // let v2 = new THREE.Vector3(0, 0, -5);
-
-  // let v0 = new THREE.Vector3(0, 0, -5);
-  // let v1 = new THREE.Vector3(-5, 1, -5);
-  // let v2 = new THREE.Vector3(0, 1, -5);
-
-  let triangle1 = new Triangulo(
-    new THREE.Vector3(1.0, -1.0, -3.5),
-    new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(-0.75, -1.0, -4.5));
-  triangle1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  triangle1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  triangle1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  triangle1.n = 32;
-  // geometries.push(triangle1);
-
-  let triangle2 = new Triangulo(
-    new THREE.Vector3(2.0, -2.0, -5.5),
-    new THREE.Vector3(2.0, 2.0, -5.0),
-    new THREE.Vector3(-2.75, -2.0, -6.5));
-  triangle2.ka = new THREE.Vector3(0.0, 1.0, 0.0);
-  triangle2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  triangle2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  triangle2.n = 32;
-  // geometries.push(triangle2);
-
-  let triangle3 = new Triangulo(
-    new THREE.Vector3(1.0, -1.0, -3.5),
-    new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(-0.75, -1.0, -4.5));
-  triangle3.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  triangle3.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  triangle3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  triangle3.n = 32;
-  // geometries.push(triangle3);
-
   // Intensidade da luz pontual/direcional.
-  let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-5.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(0.0, 2.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-1.0, -1.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+
 
   // Lacos que percorrem os pixels do sensor.
   for (let y = 0; y < 512; ++y) {
@@ -433,4 +314,242 @@ function Render() {
   }
 }
 
-Render(); // Invoca o ray tracer.
+///////////////////////////////////////////////////////////////////////////////
+// Funcao que retorna todas as geometrias a serem renderizadas na cena.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array das geometrias a serem renderizadas na cena.
+///////////////////////////////////////////////////////////////////////////////
+function getGeometries() {
+  let geometries = [];
+
+  // geometries.push(...sequentialSpheresScene());
+  // geometries.push(...triangles());
+  // geometries.push(...triangle2SpheresScene());
+  geometries.push(...trianglesInside());
+
+  return geometries;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Funcao que a cena 1: cena das esferas da menor para a maior.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   spheres(Array): Array das esferas.
+///////////////////////////////////////////////////////////////////////////////
+function sequentialSpheresScene() {
+
+  let spheres = [];
+
+  // Esferas Vermelhas
+  let sphere1 = new Esfera(new THREE.Vector3(1.5, 0.0, -3.0), 1.0);
+  sphere1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere1.n = 32;
+  spheres.push(sphere1);
+
+  let sphere2 = new Esfera(new THREE.Vector3(-0.2, -0.5, -3.0), 0.5);
+  sphere2.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere2.n = 32;
+  spheres.push(sphere2);
+
+  let sphere3 = new Esfera(new THREE.Vector3(-1.2, -0.75, -3.0), 0.25);
+  sphere3.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere3.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere3.n = 32;
+  spheres.push(sphere3);
+
+  let sphere4 = new Esfera(new THREE.Vector3(-2.0, -0.875, -3.0), 0.125);
+  sphere4.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere4.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere4.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere4.n = 32;
+  spheres.push(sphere4);
+
+  let sphere5 = new Esfera(new THREE.Vector3(-2.5, -0.9375, -3.0), 0.125 / 2);
+  sphere5.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere5.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  sphere5.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere5.n = 32;
+  spheres.push(sphere5);
+
+  return spheres;
+}
+
+function triangle2SpheresScene() {
+
+  let geometries = [];
+
+  /* rgba(76,0,0,255) */
+  let triangle = new Triangulo(
+    new THREE.Vector3(0, -1, -5),
+    new THREE.Vector3(4.8, -1, -5),
+    new THREE.Vector3(2.5, 4.8, -5));
+  triangle.ka = new THREE.Vector3(76 / 255, 0 / 255, 0 / 255);
+  triangle.kd = new THREE.Vector3(76 / 255, 0 / 255, 0 / 255);
+  triangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  triangle.n = 32;
+  geometries.push(triangle);
+
+  /* rgba(1,1,95,255) */
+  let sphere1 = new Esfera(new THREE.Vector3(-1, 0.8, -3.0), 1.3);
+  sphere1.ka = new THREE.Vector3(0 / 255, 85 / 255, 70 / 255);
+  sphere1.kd = new THREE.Vector3(0 / 255, 85 / 255, 70 / 255);
+  sphere1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere1.n = 32;
+  geometries.push(sphere1);
+
+  /* rgb(3, 25, 38) */
+  let sphere2 = new Esfera(new THREE.Vector3(0.3, -0.5, -3.0), 0.5);
+  sphere2.ka = new THREE.Vector3(3 / 255, 25 / 255, 38 / 89);
+  sphere2.kd = new THREE.Vector3(3 / 255, 25 / 255, 38 / 89);
+  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  sphere2.n = 32;
+  geometries.push(sphere2);
+
+  return geometries;
+}
+
+function triangles() {
+
+  let triangles = [];
+
+  let refTriangle = new Triangulo(
+    new THREE.Vector3(-1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(-0.75, -1.0, -2.5));
+  refTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  refTriangle.n = 32;
+  // triangles.push(refTriangle);
+
+  let refTriangleModified = new Triangulo(
+    new THREE.Vector3(1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(-0.75, -1.0, -4.5));
+  refTriangleModified.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangleModified.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangleModified.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  refTriangleModified.n = 32;
+  // triangles.push(refTriangleModified);
+
+  let smallRampTriangle = new Triangulo(
+    new THREE.Vector3(2.0, -2.0, -5.5),
+    new THREE.Vector3(2.0, 2.0, -5.0),
+    new THREE.Vector3(-2.75, -2.0, -6.5));
+  smallRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  smallRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  smallRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallRampTriangle.n = 32;
+  // triangles.push(smallRampTriangle);
+
+  let bigRampTriangle = new Triangulo(
+    new THREE.Vector3(7.0, -7.0, -10.5),
+    new THREE.Vector3(7.0, 7.0, -10.0),
+    new THREE.Vector3(-7.75, -7.0, -11.5));
+  bigRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  bigRampTriangle.n = 32;
+  // triangles.push(bigRampTriangle);
+
+  let smallTriangle = new Triangulo(
+    new THREE.Vector3(-2.5, -3, -5),
+    new THREE.Vector3(2.5, -3, -5),
+    new THREE.Vector3(0, 1.5, -5));
+  smallTriangle.ka = new THREE.Vector3(0.0, 0.0, 0.0);
+  smallTriangle.kd = new THREE.Vector3(0.0, 0.0, 0.0);
+  smallTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallTriangle.n = 32;
+  // triangles.push(smallTriangle);
+
+
+  // let smallestTriangle = new Triangulo(
+  //   new THREE.Vector3(-4, -1, -5),
+  //   new THREE.Vector3(-3, -1, -5),
+  //   new THREE.Vector3(-3.5, 0, -5));
+  // smallestTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  // smallestTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  // smallestTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // smallestTriangle.n = 32;
+  // triangles.push(smallestTriangle);
+
+
+  // let triangle1 = new Triangulo(
+  //   new THREE.Vector3(1.0, -1.0, -3.5),
+  //   new THREE.Vector3(1.0, 1.0, -3.0),
+  //   new THREE.Vector3(-0.75, -1.0, -4.5));
+  // triangle1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  // triangle1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  // triangle1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // triangle1.n = 32;
+  // geometries.push(triangle1);
+
+  // let triangle2 = new Triangulo(
+  //   new THREE.Vector3(2.0, -2.0, -5.5),
+  //   new THREE.Vector3(2.0, 2.0, -5.0),
+  //   new THREE.Vector3(-2.75, -2.0, -6.5));
+  // triangle2.ka = new THREE.Vector3(0.0, 1.0, 0.0);
+  // triangle2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  // triangle2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // triangle2.n = 32;
+  // geometries.push(triangle2);
+
+  // let triangle3 = new Triangulo(
+  //   new THREE.Vector3(1.0, -1.0, -3.5),
+  //   new THREE.Vector3(1.0, 1.0, -3.0),
+  //   new THREE.Vector3(-0.75, -1.0, -4.5));
+  // triangle3.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  // triangle3.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
+  // triangle3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  // triangle3.n = 32;
+  // geometries.push(triangle3);
+
+  return triangles;
+}
+
+function trianglesInside() {
+
+  let triangles = [];
+
+  let bigTriangle = new Triangulo(
+    new THREE.Vector3(-4, -4, -5),
+    new THREE.Vector3(4, -4, -5),
+    new THREE.Vector3(0, 4, -5));
+  bigTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  bigTriangle.n = 32;
+  triangles.push(bigTriangle);
+
+  let smallestTriangle1 = new Triangulo(
+    new THREE.Vector3(-1.4, -2.53, -5),
+    new THREE.Vector3(1.4, -2.53, -5),
+    new THREE.Vector3(0, 0.4, -5));
+  smallestTriangle1.ka = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallestTriangle1.kd = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallestTriangle1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallestTriangle1.n = 32;
+  triangles.push(smallestTriangle1);
+
+  let smallestTriangle2 = new Triangulo(
+    new THREE.Vector3(-1.3, -2.5, -5),
+    new THREE.Vector3(1.3, -2.5, -5),
+    new THREE.Vector3(0, 0.3, -5));
+  smallestTriangle2.ka = new THREE.Vector3(0.0, 0.0, 0.0);
+  smallestTriangle2.kd = new THREE.Vector3(0.0, 0.0, 0.0);
+  smallestTriangle2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallestTriangle2.n = 32;
+  triangles.push(smallestTriangle2);
+
+  return triangles;
+}
+
+Render(getGeometries()); // Invoca o ray tracer.
