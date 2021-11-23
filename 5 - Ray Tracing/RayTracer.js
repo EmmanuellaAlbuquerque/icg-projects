@@ -226,8 +226,6 @@ class Triangulo {
     interseccao.t = t;
     interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
     interseccao.normal = v0v1.cross(v0v2).normalize();
-    // interseccao.normal = interseccao.posicao.multiplyScalar(-1).normalize();
-    // interseccao.normal = baricentro.multiplyScalar(-1).normalize();
 
     return true;
   }
@@ -263,8 +261,8 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-1.0, -1.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
 
   // Lacos que percorrem os pixels do sensor.
@@ -298,9 +296,6 @@ function Render(geometries) {
           // Intensidade (cor) final do pixel, após a avaliação do modelo local de iluminação.
           let I = termo_ambiente.add(termo_difuso).add(termo_especular);
 
-          // Interpolate colors using the row barycentric coordinates.
-          // I = new THREE.Vector3(u, v, 1 - u - v);
-
           PutPixel(x, y, I); // Combina os termos difuso e ambiente e pinta o pixel.
 
         }
@@ -325,9 +320,9 @@ function getGeometries() {
   let geometries = [];
 
   // geometries.push(...sequentialSpheresScene());
-  // geometries.push(...triangles());
+  geometries.push(...triangles());
   // geometries.push(...triangle2SpheresScene());
-  geometries.push(...trianglesInside());
+  // geometries.push(...trianglesInside());
 
   return geometries;
 }
@@ -440,6 +435,16 @@ function triangles() {
   refTriangleModified.n = 32;
   // triangles.push(refTriangleModified);
 
+  let bigRampTriangle = new Triangulo(
+    new THREE.Vector3(7.0, -7.0, -10.5),
+    new THREE.Vector3(7.0, 7.0, -10.0),
+    new THREE.Vector3(-7.75, -7.0, -11.5));
+  bigRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  bigRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  bigRampTriangle.n = 32;
+  triangles.push(bigRampTriangle);
+
   let smallRampTriangle = new Triangulo(
     new THREE.Vector3(2.0, -2.0, -5.5),
     new THREE.Vector3(2.0, 2.0, -5.0),
@@ -450,67 +455,15 @@ function triangles() {
   smallRampTriangle.n = 32;
   // triangles.push(smallRampTriangle);
 
-  let bigRampTriangle = new Triangulo(
-    new THREE.Vector3(7.0, -7.0, -10.5),
-    new THREE.Vector3(7.0, 7.0, -10.0),
-    new THREE.Vector3(-7.75, -7.0, -11.5));
-  bigRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  bigRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  bigRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  bigRampTriangle.n = 32;
-  // triangles.push(bigRampTriangle);
-
-  let smallTriangle = new Triangulo(
-    new THREE.Vector3(-2.5, -3, -5),
-    new THREE.Vector3(2.5, -3, -5),
-    new THREE.Vector3(0, 1.5, -5));
-  smallTriangle.ka = new THREE.Vector3(0.0, 0.0, 0.0);
-  smallTriangle.kd = new THREE.Vector3(0.0, 0.0, 0.0);
-  smallTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  smallTriangle.n = 32;
-  // triangles.push(smallTriangle);
-
-
-  // let smallestTriangle = new Triangulo(
-  //   new THREE.Vector3(-4, -1, -5),
-  //   new THREE.Vector3(-3, -1, -5),
-  //   new THREE.Vector3(-3.5, 0, -5));
-  // smallestTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  // smallestTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  // smallestTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // smallestTriangle.n = 32;
-  // triangles.push(smallestTriangle);
-
-
-  // let triangle1 = new Triangulo(
-  //   new THREE.Vector3(1.0, -1.0, -3.5),
-  //   new THREE.Vector3(1.0, 1.0, -3.0),
-  //   new THREE.Vector3(-0.75, -1.0, -4.5));
-  // triangle1.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  // triangle1.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  // triangle1.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // triangle1.n = 32;
-  // geometries.push(triangle1);
-
-  // let triangle2 = new Triangulo(
-  //   new THREE.Vector3(2.0, -2.0, -5.5),
-  //   new THREE.Vector3(2.0, 2.0, -5.0),
-  //   new THREE.Vector3(-2.75, -2.0, -6.5));
-  // triangle2.ka = new THREE.Vector3(0.0, 1.0, 0.0);
-  // triangle2.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  // triangle2.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // triangle2.n = 32;
-  // geometries.push(triangle2);
-
-  // let triangle3 = new Triangulo(
-  //   new THREE.Vector3(1.0, -1.0, -3.5),
-  //   new THREE.Vector3(1.0, 1.0, -3.0),
-  //   new THREE.Vector3(-0.75, -1.0, -4.5));
-  // triangle3.ka = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  // triangle3.kd = new THREE.Vector3(239 / 255, 8 / 255, 20 / 255);
-  // triangle3.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  // triangle3.n = 32;
-  // geometries.push(triangle3);
+  let smallestTriangle = new Triangulo(
+    new THREE.Vector3(-4, -1, -5),
+    new THREE.Vector3(-3, -1, -5),
+    new THREE.Vector3(-3.5, 0, -5));
+  smallestTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  smallestTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  smallestTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  smallestTriangle.n = 32;
+  triangles.push(smallestTriangle);
 
   return triangles;
 }
