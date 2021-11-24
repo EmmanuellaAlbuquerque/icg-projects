@@ -32,7 +32,8 @@ function clear() {
   let c = document.getElementById("canvas");
   let ctx = c.getContext("2d");
   // ctx.fillStyle = "#002633";
-  ctx.fillStyle = "#004C66";
+  // ctx.fillStyle = "#004C66";
+  ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }
 
@@ -268,7 +269,7 @@ function getGeometries() {
   // geometries.push(...triangles());
   // geometries.push(...triangle2SpheresScene());
   // geometries.push(...trianglesInside());
-  geometries.push(...miniFamilyGeometries());
+  geometries.push(...abstractArt());
 
   return geometries;
 }
@@ -291,8 +292,9 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(-1.0, -1.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-
+  // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(getRandom(-10.0, 10.0), getRandom(-10.0, 10.0), getRandom(4.0, 10.0)), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
   for (let y = 0; y < 512; ++y) {
@@ -336,6 +338,8 @@ function Render(geometries) {
       });
     }
   }
+
+  alert("Hello, Friend! The scene has just been rendered! ");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -516,16 +520,26 @@ function trianglesInside() {
   return triangles;
 }
 
-function getRandom(min = -2, max = 1) {
-  return Math.random() * (max - min + 1) + min;
+function getRandom(min = -20, max = 20) {
+  return Math.random() * (max - min) + min;
 }
 
-function miniFamilyGeometries() {
+function abstractArt() {
 
   let geometries = [];
 
-  for (let i = 0; i < 20; i++) {
-    let sphere = new Esfera(new THREE.Vector3(getRandom(), getRandom(), getRandom(-10, -1)), 0.3);
+  for (let i = 0; i < 10; i++) {
+    let triangle = new Triangulo(
+      new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
+      new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
+      new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)));
+    triangle.ka = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    triangle.kd = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    triangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+    triangle.n = 32;
+    geometries.push(triangle);
+
+    let sphere = new Esfera(new THREE.Vector3(getRandom(-2, 2), getRandom(-2, 2), getRandom(-5, -3)), getRandom(0.1, 1));
     sphere.ka = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
     sphere.kd = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
     sphere.ks = new THREE.Vector3(1.0, 1.0, 1.0);
@@ -537,3 +551,4 @@ function miniFamilyGeometries() {
 }
 
 Render(getGeometries()); // Invoca o ray tracer.
+location.reload();
