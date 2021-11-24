@@ -28,6 +28,15 @@ function drawReferenceLine(x0, y0, x1, y1) {
   ctx.stroke();
 }
 
+function clear() {
+  let c = document.getElementById("canvas");
+  let ctx = c.getContext("2d");
+  ctx.fillStyle = this.clear_color;
+  ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+}
+
+clear();
+
 // drawReferenceLine(0, 512 / 2, 512, 512 / 2);
 // drawReferenceLine(512 / 2, 0, 512 / 2, 512);
 
@@ -245,6 +254,25 @@ class Luz {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Funcao que retorna todas as geometrias a serem renderizadas na cena.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array das geometrias a serem renderizadas na cena.
+///////////////////////////////////////////////////////////////////////////////
+function getGeometries() {
+  let geometries = [];
+
+  // geometries.push(...sequentialSpheresScene());
+  // geometries.push(...triangles());
+  // geometries.push(...triangle2SpheresScene());
+  // geometries.push(...trianglesInside());
+  geometries.push(...miniFamilyGeometries());
+
+  return geometries;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Funcao que renderiza a cena utilizando ray tracing.
 // Entrada: 
 //  geometries(Array): Array das geometrias a serem renderizadas na cena.
@@ -261,8 +289,8 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-1.0, -1.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
 
 
   // Lacos que percorrem os pixels do sensor.
@@ -307,24 +335,6 @@ function Render(geometries) {
       });
     }
   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Funcao que retorna todas as geometrias a serem renderizadas na cena.
-// Entrada: 
-//  Sem entrada.
-// Retorno:
-//   geometries(Array): Array das geometrias a serem renderizadas na cena.
-///////////////////////////////////////////////////////////////////////////////
-function getGeometries() {
-  let geometries = [];
-
-  // geometries.push(...sequentialSpheresScene());
-  geometries.push(...triangles());
-  // geometries.push(...triangle2SpheresScene());
-  // geometries.push(...trianglesInside());
-
-  return geometries;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -503,6 +513,21 @@ function trianglesInside() {
   triangles.push(smallestTriangle2);
 
   return triangles;
+}
+
+function miniFamilyGeometries() {
+
+  let geometries = [];
+
+  /* rgb(3, 25, 38) */
+  let sphere2 = new Esfera(new THREE.Vector3(0.3, -0.5, -3.0), 0.5);
+  sphere2.ka = new THREE.Vector3(1.0, 0.0, 0.0, 0.0);
+  sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0, 0.0);
+  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0, 0.0);
+  sphere2.n = 32;
+  geometries.push(sphere2);
+
+  return geometries;
 }
 
 Render(getGeometries()); // Invoca o ray tracer.
