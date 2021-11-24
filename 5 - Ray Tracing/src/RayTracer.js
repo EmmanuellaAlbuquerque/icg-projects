@@ -31,7 +31,8 @@ function drawReferenceLine(x0, y0, x1, y1) {
 function clear() {
   let c = document.getElementById("canvas");
   let ctx = c.getContext("2d");
-  ctx.fillStyle = this.clear_color;
+  // ctx.fillStyle = "#002633";
+  ctx.fillStyle = "#004C66";
   ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 }
 
@@ -515,17 +516,22 @@ function trianglesInside() {
   return triangles;
 }
 
+function getRandom(min = -2, max = 1) {
+  return Math.random() * (max - min + 1) + min;
+}
+
 function miniFamilyGeometries() {
 
   let geometries = [];
 
-  /* rgb(3, 25, 38) */
-  let sphere2 = new Esfera(new THREE.Vector3(0.3, -0.5, -3.0), 0.5);
-  sphere2.ka = new THREE.Vector3(1.0, 0.0, 0.0, 0.0);
-  sphere2.kd = new THREE.Vector3(1.0, 0.0, 0.0, 0.0);
-  sphere2.ks = new THREE.Vector3(1.0, 1.0, 1.0, 0.0);
-  sphere2.n = 32;
-  geometries.push(sphere2);
+  for (let i = 0; i < 20; i++) {
+    let sphere = new Esfera(new THREE.Vector3(getRandom(), getRandom(), getRandom(-10, -1)), 0.3);
+    sphere.ka = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    sphere.kd = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    sphere.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+    sphere.n = 32;
+    geometries.push(sphere);
+  }
 
   return geometries;
 }
