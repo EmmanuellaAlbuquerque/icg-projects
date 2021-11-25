@@ -1,5 +1,5 @@
 // Mesh2 file created by ply_to_mesh2
-//
+
 #declare Bunny =
 mesh2 { vertex_vectors { 35947 
 
@@ -105403,4 +105403,13 @@ mesh2 { vertex_vectors { 35947
 ,<34909,17346,17277>
 ,<17277,17346,17345>
 }
-inside_vector <0,0.1,0>};
+inside_vector <0,0.1,0>
+
+// edited part
+pigment { color rgb <1, 1, 1> }
+scale 10
+rotate <0, -170, 0>
+translate <0, -0.3, 0>
+finish { ambient 0.2 diffuse 0.4 }
+
+};
