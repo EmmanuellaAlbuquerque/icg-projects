@@ -1,4 +1,7 @@
+///////////////////////////////////////////////////////////////////////////////
 // Baseball Bat Script (pov)
+// Cena: Taco de Beisebol com textura de Madeira e uma Bola de Beisebol.
+///////////////////////////////////////////////////////////////////////////////
 
 #include "colors.inc"
 
@@ -9,7 +12,12 @@ camera {
 }
 
 light_source {
-  <20, 13, -60>, White
+  <4, 1.5, -60>, White
+  shadowless
+}
+
+light_source {
+  <3, 3, -60>, White
   shadowless
 }
 
@@ -18,7 +26,7 @@ sky_sphere {
     gradient y
     color_map {
       [0 color White]
-      [1 color Blue]
+      [1 color Black]
     }
 
     scale 2
@@ -26,8 +34,12 @@ sky_sphere {
   }
 }
 
-// /* =-=-==-=-= FIRST STEP =-=-==-=-= */
-// Definindo os pontos
+///////////////////////////////////////////////////////////////////////////////
+// FIRST STEP: Definindo os pontos.
+// (i.e as esferas que irão compor o taco)
+///////////////////////////////////////////////////////////////////////////////
+
+/*
 sphere {
   <-2, -2, 0>, .2
   pigment { Black }
@@ -41,7 +53,7 @@ sphere {
 }
 
 sphere {
-  <1, 1, 0>, .6
+  <1, 1, 0>, .5
   pigment { Black }
   finish { ambient .4} // define light to sphere between 0, 1
 }
@@ -51,27 +63,41 @@ sphere {
   pigment { Black }
   finish { ambient .4} // define light to sphere between 0, 1
 }
+*/
 
+///////////////////////////////////////////////////////////////////////////////
+// SECOND STEP:
+// Definindo a bola de Beisebol e aplicando a textura.
+///////////////////////////////////////////////////////////////////////////////
 sphere {
-  <4, 1.5, 0>, .6
-  pigment { White }
+  <0, 0, 0>, .6
+  pigment {
+     image_map {
+      jpeg "images/Ball-Texture.jpg"
+      map_type 1 // spherical mapping
+    }
+   }
+
+  rotate <0, 45, 0>
+  translate <4, 1.5, 0>
   finish { ambient .4} // define light to sphere between 0, 1
 }
 
-/* =-=-==-=-= SECOND STEP =-=-==-=-= */
+///////////////////////////////////////////////////////////////////////////////
+// THIRD STEP:
+// Definindo o Taco de Beisebol e aplicando a textura.
+///////////////////////////////////////////////////////////////////////////////
 sphere_sweep {
   linear_spline // linear(straight) path
-  // cubic_spline // linear(straight) path
   4, // positions
 
   <-2, -2, 0>, .2 // start position, radius
   <-1, -1, 0>, .2
-  <1, 1, 0>, .6
+  <1, 1, 0>, .5
   <3, 3, 0>, .6 // end position, radius
 
   pigment {
     image_map {
-      // jpeg "images/Baseball-Bat-Texture.jpg"
       jpeg "images/Wood-Texture.jpg"
       map_type 1
     }
