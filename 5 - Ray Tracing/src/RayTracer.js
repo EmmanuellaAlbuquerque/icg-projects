@@ -201,7 +201,7 @@ class Triangulo {
   }
 
   // MOLLER TRUMBORE
-  // Fast, Minimum Storage Ray/Triangle Intersectio
+  // Fast, Minimum Storage Ray/Triangle Intersection
   interseccionar(raio, interseccao) {
     let kEpsilon = 0.00000001;
 
@@ -235,8 +235,9 @@ class Triangulo {
     let baricentro = new THREE.Vector3(xg, yg, zg);
 
     interseccao.t = t;
-    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
-    interseccao.normal = v0v1.cross(v0v2).normalize();
+    //interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
+    interseccao.posicao = this.v0.clone().add(v0v1.multiplyScalar(u)).add(v0v2.multiplyScalar(v));
+    interseccao.normal = v0v2.cross(v0v1).normalize();
 
     return true;
   }
@@ -266,10 +267,10 @@ function getGeometries() {
   let geometries = [];
 
   // geometries.push(...sequentialSpheresScene());
-  // geometries.push(...triangles());
+  geometries.push(...triangles());
   // geometries.push(...triangle2SpheresScene());
   // geometries.push(...trianglesInside());
-  geometries.push(...abstractArt());
+  // geometries.push(...abstractArt());
 
   return geometries;
 }
@@ -285,7 +286,7 @@ function Render(geometries) {
   let camera = new Camera();
 
   // Intensidade da luz pontual/direcional.
-  // let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-5.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(0.0, 2.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
@@ -294,7 +295,7 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  let Ip = new Luz(new THREE.Vector3(getRandom(-10.0, 10.0), getRandom(-10.0, 10.0), getRandom(4.0, 10.0)), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(getRandom(-10.0, 10.0), getRandom(-10.0, 10.0), getRandom(4.0, 10.0)), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
   for (let y = 0; y < 512; ++y) {
@@ -339,7 +340,7 @@ function Render(geometries) {
     }
   }
 
-  alert("Hello, Friend! The scene has just been rendered! ");
+  // alert("Hello, Friend! The scene has just been rendered! ");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -430,26 +431,6 @@ function triangles() {
 
   let triangles = [];
 
-  let refTriangle = new Triangulo(
-    new THREE.Vector3(-1.0, -1.0, -3.5),
-    new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(-0.75, -1.0, -2.5));
-  refTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  refTriangle.n = 32;
-  // triangles.push(refTriangle);
-
-  let refTriangleModified = new Triangulo(
-    new THREE.Vector3(1.0, -1.0, -3.5),
-    new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(-0.75, -1.0, -4.5));
-  refTriangleModified.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  refTriangleModified.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  refTriangleModified.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  refTriangleModified.n = 32;
-  // triangles.push(refTriangleModified);
-
   let bigRampTriangle = new Triangulo(
     new THREE.Vector3(7.0, -7.0, -10.5),
     new THREE.Vector3(7.0, 7.0, -10.0),
@@ -478,7 +459,27 @@ function triangles() {
   smallestTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   smallestTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   smallestTriangle.n = 32;
-  triangles.push(smallestTriangle);
+  // triangles.push(smallestTriangle);
+
+  let refTriangleModified = new Triangulo(
+    new THREE.Vector3(1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(-0.75, -1.0, -4.5));
+  refTriangleModified.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangleModified.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangleModified.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  refTriangleModified.n = 32;
+  // triangles.push(refTriangleModified);
+
+  let refTriangle = new Triangulo(
+    new THREE.Vector3(-1.0, -1.0, -3.5),
+    new THREE.Vector3(1.0, 1.0, -3.0),
+    new THREE.Vector3(0.75, -1.0, -2.5));
+  refTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  refTriangle.n = 32;
+  triangles.push(refTriangle);
 
   return triangles;
 }
@@ -551,4 +552,4 @@ function abstractArt() {
 }
 
 Render(getGeometries()); // Invoca o ray tracer.
-location.reload();
+// location.reload();
