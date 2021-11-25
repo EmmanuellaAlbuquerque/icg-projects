@@ -235,8 +235,7 @@ class Triangulo {
     let baricentro = new THREE.Vector3(xg, yg, zg);
 
     interseccao.t = t;
-    //interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
-    interseccao.posicao = this.v0.clone().add(v0v1.multiplyScalar(u)).add(v0v2.multiplyScalar(v));
+    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
     interseccao.normal = v0v2.cross(v0v1).normalize();
 
     return true;
