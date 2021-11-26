@@ -222,30 +222,29 @@ class Triangulo {
     let pvec = raio.direcao.clone().cross(edge2);
     let det = edge1.clone().dot(pvec);
 
-    // Determinando Visibilidade: Backface Culling
-    if (det < EPSILON) return false;
+    // Sem Backface Culling
+    if (det > -EPSILON && det < EPSILON) return false;
+
+    // --- Calculando parâmetros escalares u, v, t ---
+
+    let invDet = 1.0 / det;
 
     // Calculando a distância entre o vértice 0 e a origem do raio.
     let tvec = raio.origem.clone().sub(this.v0);
 
     // Calculando o parâmetro u e testando os limites
-    let u = tvec.clone().dot(pvec);
-    if (u < 0.0 || u > det) return false;
+    let u = tvec.clone().dot(pvec) * invDet;
+    if (u < 0.0 || u > 1.0) return false;
 
     let qvec = tvec.clone().cross(edge1);
 
     // Calculando o parâmetro v e testando os limites
-    let v = raio.direcao.clone().dot(qvec);
-    if (v < 0.0 || u + v > det) return false;
-
-    // Calculando parâmetros escalares u, v, t 
-    let invDet = 1.0 / det;
+    let v = raio.direcao.clone().dot(qvec) * invDet;
+    if (v < 0.0 || u + v > 1.0) return false;
 
     // Calculando t, o raio intersecciona o triângulo!
     // t: distância do raio até o ponto de intersecção.
     let t = edge2.clone().dot(qvec) * invDet;
-    u *= invDet;
-    v *= invDet;
 
     // let xg = (this.v0.x + this.v1.x + this.v2.x) / 3;
     // let yg = (this.v0.y + this.v1.y + this.v2.y) / 3;
@@ -286,10 +285,10 @@ function getGeometries() {
   let geometries = [];
 
   // geometries.push(...sequentialSpheresScene());
-  geometries.push(...triangles());
+  // geometries.push(...triangles());
   // geometries.push(...triangle2SpheresScene());
   // geometries.push(...trianglesInside());
-  // geometries.push(...abstractArt());
+  geometries.push(...abstractArt());
 
   return geometries;
 }
@@ -305,7 +304,10 @@ function Render(geometries) {
   let camera = new Camera();
 
   // Intensidade da luz pontual/direcional.
-  // let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // Inicial
+  let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+
+  // Testando outros valores de Ip.
   // let Ip = new Luz(new THREE.Vector3(-5.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(0.0, 2.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
@@ -313,7 +315,7 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(getRandom(-10.0, 10.0), getRandom(-10.0, 10.0), getRandom(4.0, 10.0)), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
@@ -363,7 +365,7 @@ function Render(geometries) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Funcao que a cena 1: cena das esferas da menor para a maior.
+// Cena 1: cena das esferas da menor para a maior.
 // Entrada: 
 //  Sem entrada.
 // Retorno:
@@ -412,6 +414,13 @@ function sequentialSpheresScene() {
   return spheres;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Cena 2: cena com duas esferas e um triângulo.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array com as geometrias.
+///////////////////////////////////////////////////////////////////////////////
 function triangle2SpheresScene() {
 
   let geometries = [];
@@ -446,37 +455,31 @@ function triangle2SpheresScene() {
   return geometries;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Cena com alguns triângulos.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array com os triângulos.
+///////////////////////////////////////////////////////////////////////////////
 function triangles() {
 
   let triangles = [];
 
   let bigRampTriangle = new Triangulo(
-    new THREE.Vector3(7.0, -7.0, -10.5),
-    new THREE.Vector3(7.0, 7.0, -10.0),
-    new THREE.Vector3(-7.75, -7.0, -11.5));
-  // new THREE.Vector3(-7.0, 7.0, 10.5),
-  // new THREE.Vector3(-7.0, -7.0, 10.0),
-  // new THREE.Vector3(7.75, 7.0, 11.5));
+    new THREE.Vector3(-7.0, 7.0, 10.5),
+    new THREE.Vector3(-7.0, -7.0, 10.0),
+    new THREE.Vector3(7.75, 7.0, 11.5));
   bigRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   bigRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   bigRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   bigRampTriangle.n = 32;
-  triangles.push(bigRampTriangle);
-
-  let smallRampTriangle = new Triangulo(
-    new THREE.Vector3(2.0, -2.0, -5.5),
-    new THREE.Vector3(2.0, 2.0, -5.0),
-    new THREE.Vector3(-2.75, -2.0, -6.5));
-  smallRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
-  smallRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
-  smallRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
-  smallRampTriangle.n = 32;
-  // triangles.push(smallRampTriangle);
+  // triangles.push(bigRampTriangle);
 
   let smallestTriangle = new Triangulo(
     new THREE.Vector3(-4, -1, -5),
     new THREE.Vector3(-3, -1, -5),
-    new THREE.Vector3(-3.5, 0, -5));
+    new THREE.Vector3(-3.5, -0, -5));
   smallestTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   smallestTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   smallestTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
@@ -484,28 +487,35 @@ function triangles() {
   // triangles.push(smallestTriangle);
 
   let refTriangleModified = new Triangulo(
-    new THREE.Vector3(1.0, -1.0, -3.5),
     new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(-0.75, -1.0, -4.5));
+    new THREE.Vector3(0.75, -1, -2.5),
+    new THREE.Vector3(-1.0, -1.0, -3.5));
   refTriangleModified.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangleModified.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangleModified.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   refTriangleModified.n = 32;
-  // triangles.push(refTriangleModified);
+  triangles.push(refTriangleModified);
 
   let refTriangle = new Triangulo(
     new THREE.Vector3(-1.0, -1.0, -3.5),
     new THREE.Vector3(1.0, 1.0, -3.0),
-    new THREE.Vector3(0.75, -1.0, -2.5));
+    new THREE.Vector3(-0.75, -1, -2.5));
   refTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   refTriangle.n = 32;
-  // triangles.push(refTriangle);
+  triangles.push(refTriangle);
 
   return triangles;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Cena 3: cena com triângulos. (Régua)
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array com as geometrias.
+///////////////////////////////////////////////////////////////////////////////
 function trianglesInside() {
 
   let triangles = [];
@@ -543,15 +553,30 @@ function trianglesInside() {
   return triangles;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Funcao que retorna um numero randomico entre Min e Max.
+// Entrada: 
+//  Min: Valor mínimo.
+//  Max: Valor máximo.
+// Retorno:
+//   float: número randomico.
+///////////////////////////////////////////////////////////////////////////////
 function getRandom(min = -20, max = 20) {
   return Math.random() * (max - min) + min;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// Cena 4: Gera uma cena randomica com triângulos e esferas.
+// Entrada: 
+//  Sem entrada.
+// Retorno:
+//   geometries(Array): Array com as geometrias.
+///////////////////////////////////////////////////////////////////////////////
 function abstractArt() {
 
   let geometries = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 20; i++) {
     let triangle = new Triangulo(
       new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
       new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
@@ -562,16 +587,28 @@ function abstractArt() {
     triangle.n = 32;
     geometries.push(triangle);
 
-    let sphere = new Esfera(new THREE.Vector3(getRandom(-2, 2), getRandom(-2, 2), getRandom(-5, -3)), getRandom(0.1, 1));
+    let sphere = new Esfera(new THREE.Vector3(getRandom(-4, 4), getRandom(-4, 4), getRandom(-10, -4)), getRandom(0.1, 1));
     sphere.ka = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
     sphere.kd = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
     sphere.ks = new THREE.Vector3(1.0, 1.0, 1.0);
     sphere.n = 32;
     geometries.push(sphere);
+
+    let triangleSet = new Triangulo(
+      new THREE.Vector3(1.0, 1.0, getRandom(-100, -3)),
+      new THREE.Vector3(0.75, -1, getRandom(-100, -3)),
+      new THREE.Vector3(-1, -1, getRandom(-100, -3)));
+    triangleSet.ka = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    triangleSet.kd = new THREE.Vector3(getRandom(0, 1), getRandom(0, 1), getRandom(0, 1));
+    triangleSet.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+    triangleSet.n = 32;
+    // geometries.push(triangleSet);
+
   }
 
   return geometries;
 }
 
 Render(getGeometries()); // Invoca o ray tracer.
-// location.reload();
+
+location.reload(); //  Recarrega a página. 
