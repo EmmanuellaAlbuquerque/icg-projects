@@ -1,3 +1,5 @@
+const EPSILON = 0.000001;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Funcao que desenha um pixel colorido no canvas.
 // Entrada: 
@@ -200,43 +202,61 @@ class Triangulo {
     this.n = 0;
   }
 
-  // MOLLER TRUMBORE
-  // Fast, Minimum Storage Ray/Triangle Intersection
+  ///////////////////////////////////////////////////////////////////////////////
+  // Metodo que testa a interseccao entre o raio e o triângulo.
+  // MOLLER TRUMBORE: Fast, Minimum Storage Ray/Triangle Intersection
+  // Entrada: 
+  //   raio: Objeto do tipo Raio cuja a interseccao com o triângulo se quer verificar.
+  //   interseccao: Objeto do tipo Interseccao que armazena os dados da interseccao caso esta ocorra.
+  // Retorno:
+  //   Um valor booleano: 'true' caso haja interseccao; ou 'false' caso contrario.
+  ///////////////////////////////////////////////////////////////////////////////
   interseccionar(raio, interseccao) {
-    let kEpsilon = 0.00000001;
 
-    let v0v1 = this.v1.clone().sub(this.v0);
-    let v0v2 = this.v2.clone().sub(this.v0);
+    // Encontrando os vetores para duas arestas ligadas a v0
+    let edge1 = this.v1.clone().sub(this.v0);
+    let edge2 = this.v2.clone().sub(this.v0);
 
-    let pvec = raio.direcao.clone().cross(v0v2);
-    let det = v0v1.clone().dot(pvec);
+    // Calculando o determinante.
+    // D = (RayDirection x E2) * E1
+    let pvec = raio.direcao.clone().cross(edge2);
+    let det = edge1.clone().dot(pvec);
 
-    if (det > - kEpsilon && det < kEpsilon) false;
+    // Determinando Visibilidade: Backface Culling
+    if (det < EPSILON) return false;
 
-    let invDet = 1.0 / det;
-
+    // Calculando a distância entre o vértice 0 e a origem do raio.
     let tvec = raio.origem.clone().sub(this.v0);
 
-    let u = tvec.clone().dot(pvec) * invDet;
+    // Calculando o parâmetro u e testando os limites
+    let u = tvec.clone().dot(pvec);
+    if (u < 0.0 || u > det) return false;
 
-    if (u < 0.0 || u > 1.0) return false;
+    let qvec = tvec.clone().cross(edge1);
 
-    let qvec = tvec.clone().cross(v0v1);
+    // Calculando o parâmetro v e testando os limites
+    let v = raio.direcao.clone().dot(qvec);
+    if (v < 0.0 || u + v > det) return false;
 
-    let v = raio.direcao.clone().dot(qvec) * invDet;
+    // Calculando parâmetros escalares u, v, t 
+    let invDet = 1.0 / det;
 
-    if (v < 0.0 || u + v > 1.0) return false;
+    // Calculando t, o raio intersecciona o triângulo!
+    // t: distância do raio até o ponto de intersecção.
+    let t = edge2.clone().dot(qvec) * invDet;
+    u *= invDet;
+    v *= invDet;
 
-    let t = v0v2.clone().dot(qvec) * invDet;
-
-    let xg = (this.v0.x + this.v1.x + this.v2.x) / 3;
-    let yg = (this.v0.y + this.v1.y + this.v2.y) / 3;
-    let zg = (this.v0.z + this.v1.z + this.v2.z) / 3;
-    let baricentro = new THREE.Vector3(xg, yg, zg);
+    // let xg = (this.v0.x + this.v1.x + this.v2.x) / 3;
+    // let yg = (this.v0.y + this.v1.y + this.v2.y) / 3;
+    // let zg = (this.v0.z + this.v1.z + this.v2.z) / 3;
+    // let baricentro = new THREE.Vector3(xg, yg, zg);
 
     interseccao.t = t;
     interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
-    interseccao.normal = v0v2.cross(v0v1).normalize();
+
+    // O vetor normal do triângulo é perpendicular ao plano. 
+    interseccao.normal = edge2.cross(edge1).normalize();
 
     return true;
   }
@@ -285,7 +305,7 @@ function Render(geometries) {
   let camera = new Camera();
 
   // Intensidade da luz pontual/direcional.
-  let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  // let Ip = new Luz(new THREE.Vector3(-10.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-5.0, 10.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(0.0, 2.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(3.0, 0.5, 3.0), new THREE.Vector3(0.8, 0.8, 0.8));
@@ -293,7 +313,7 @@ function Render(geometries) {
   // let Ip = new Luz(new THREE.Vector3(-10.0, -3.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(-7.0, -2.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(8.0, 8.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
-  // let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
+  let Ip = new Luz(new THREE.Vector3(0.0, 0.0, 4.0), new THREE.Vector3(0.8, 0.8, 0.8));
   // let Ip = new Luz(new THREE.Vector3(getRandom(-10.0, 10.0), getRandom(-10.0, 10.0), getRandom(4.0, 10.0)), new THREE.Vector3(0.8, 0.8, 0.8));
 
   // Lacos que percorrem os pixels do sensor.
@@ -434,6 +454,9 @@ function triangles() {
     new THREE.Vector3(7.0, -7.0, -10.5),
     new THREE.Vector3(7.0, 7.0, -10.0),
     new THREE.Vector3(-7.75, -7.0, -11.5));
+  // new THREE.Vector3(-7.0, 7.0, 10.5),
+  // new THREE.Vector3(-7.0, -7.0, 10.0),
+  // new THREE.Vector3(7.75, 7.0, 11.5));
   bigRampTriangle.ka = new THREE.Vector3(1.0, 0.0, 0.0);
   bigRampTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   bigRampTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
@@ -478,7 +501,7 @@ function triangles() {
   refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   refTriangle.n = 32;
-  triangles.push(refTriangle);
+  // triangles.push(refTriangle);
 
   return triangles;
 }
