@@ -212,6 +212,11 @@ class Triangulo {
   //   Um valor booleano: 'true' caso haja interseccao; ou 'false' caso contrario.
   ///////////////////////////////////////////////////////////////////////////////
   interseccionar(raio, interseccao) {
+    return this.interseccionarSemBackfaceCulling(raio, interseccao);
+    // return this.interseccionarComBackfaceCulling(raio, interseccao);
+  }
+
+  interseccionarSemBackfaceCulling(raio, interseccao) {
 
     // Encontrando os vetores para duas arestas ligadas a v0
     let edge1 = this.v1.clone().sub(this.v0);
@@ -245,6 +250,51 @@ class Triangulo {
     // Calculando t, o raio intersecciona o triângulo!
     // t: distância do raio até o ponto de intersecção.
     let t = edge2.clone().dot(qvec) * invDet;
+
+    interseccao.t = t;
+    interseccao.posicao = raio.origem.clone().add(raio.direcao.clone().multiplyScalar(interseccao.t));
+
+    // O vetor normal do triângulo é perpendicular ao plano. 
+    interseccao.normal = edge2.cross(edge1).normalize();
+
+    return true;
+  }
+
+  interseccionarComBackfaceCulling(raio, interseccao) {
+
+    // Encontrando os vetores para duas arestas ligadas a v0
+    let edge1 = this.v1.clone().sub(this.v0);
+    let edge2 = this.v2.clone().sub(this.v0);
+
+    // Calculando o determinante.
+    // D = (RayDirection x E2) * E1
+    let pvec = raio.direcao.clone().cross(edge2);
+    let det = edge1.clone().dot(pvec);
+
+    // Determinando Visibilidade: Backface Culling
+    if (det < EPSILON) return false;
+
+    // Calculando a distância entre o vértice 0 e a origem do raio.
+    let tvec = raio.origem.clone().sub(this.v0);
+
+    // Calculando o parâmetro u e testando os limites
+    let u = tvec.clone().dot(pvec);
+    if (u < 0.0 || u > det) return false;
+
+    let qvec = tvec.clone().cross(edge1);
+
+    // Calculando o parâmetro v e testando os limites
+    let v = raio.direcao.clone().dot(qvec);
+    if (v < 0.0 || u + v > det) return false;
+
+    // Calculando parâmetros escalares u, v, t 
+    let invDet = 1.0 / det;
+
+    // Calculando t, o raio intersecciona o triângulo!
+    // t: distância do raio até o ponto de intersecção.
+    let t = edge2.clone().dot(qvec) * invDet;
+    u *= invDet;
+    v *= invDet;
 
     // let xg = (this.v0.x + this.v1.x + this.v2.x) / 3;
     // let yg = (this.v0.y + this.v1.y + this.v2.y) / 3;
@@ -504,7 +554,7 @@ function triangles() {
   refTriangle.kd = new THREE.Vector3(1.0, 0.0, 0.0);
   refTriangle.ks = new THREE.Vector3(1.0, 1.0, 1.0);
   refTriangle.n = 32;
-  triangles.push(refTriangle);
+  // triangles.push(refTriangle);
 
   return triangles;
 }
@@ -576,7 +626,7 @@ function abstractArt() {
 
   let geometries = [];
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 10; i++) {
     let triangle = new Triangulo(
       new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
       new THREE.Vector3(getRandom(), getRandom(), getRandom(-100, -20)),
