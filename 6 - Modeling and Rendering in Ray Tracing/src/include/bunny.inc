@@ -105409,7 +105409,7 @@ inside_vector <0,0.1,0>
 pigment { color rgb <1, 1, 1> }
 scale 10
 rotate <0, -170, 0>
-translate <0, -0.3, 0>
+translate <1.5, -0.3, 0>
 finish { ambient 0.2 diffuse 0.4 }
 
 };

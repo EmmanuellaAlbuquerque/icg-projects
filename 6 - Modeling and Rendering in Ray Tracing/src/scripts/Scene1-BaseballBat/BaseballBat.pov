@@ -39,31 +39,31 @@ sky_sphere {
 // (i.e as esferas que irão compor o taco)
 ///////////////////////////////////////////////////////////////////////////////
 
-/*
-sphere {
-  <-2, -2, 0>, .2
-  pigment { Black }
-  finish { ambient .4} // define light to sphere between 0, 1
-}
 
-sphere {
-  <-1, -1, 0>, .2
-  pigment { Black }
-  finish { ambient .4} // define light to sphere between 0, 1
-}
+// sphere {
+//   <-2, -2, 0>, .2
+//   pigment { Red }
+//   finish { ambient .4} // define light to sphere between 0, 1
+// }
 
-sphere {
-  <1, 1, 0>, .5
-  pigment { Black }
-  finish { ambient .4} // define light to sphere between 0, 1
-}
+// sphere {
+//   <-1, -1, 0>, .2
+//   pigment { Red }
+//   finish { ambient .4} // define light to sphere between 0, 1
+// }
 
-sphere {
-  <3, 3, 0>, .6
-  pigment { Black }
-  finish { ambient .4} // define light to sphere between 0, 1
-}
-*/
+// sphere {
+//   <1, 1, 0>, .5
+//   pigment { Red }
+//   finish { ambient .4} // define light to sphere between 0, 1
+// }
+
+// sphere {
+//   <3, 3, 0>, .6
+//   pigment { Red }
+//   finish { ambient .4} // define light to sphere between 0, 1
+// }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // SECOND STEP:
@@ -73,7 +73,7 @@ sphere {
   <0, 0, 0>, .6
   pigment {
      image_map {
-      jpeg "images/Ball-Texture.jpg"
+      jpeg "texture/Ball-Texture.jpg"
       map_type 1 // spherical mapping
     }
    }
@@ -98,7 +98,7 @@ sphere_sweep {
 
   pigment {
     image_map {
-      jpeg "images/Wood-Texture.jpg"
+      jpeg "texture/Wood-Texture.jpg"
       map_type 1
     }
   }

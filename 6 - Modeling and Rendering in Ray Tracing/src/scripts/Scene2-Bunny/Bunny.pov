@@ -1,10 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Bunny Script (.pov) POV-Ray
-// Cena: 
+// Cena: Um coelho em um ambiente sanguinário.
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "colors.inc"
-#include "include/bunny.inc"
+#include "include/bunny.inc" // bunny code
+#include "stones.inc"    // pre-defined scene elements
 
 camera {
   location <0, 1, -4>
@@ -47,3 +48,31 @@ plane {
 }
 
 Bunny
+
+box {
+    <-1, 0,   -1>,
+    < 1, 0.5,  3>
+    texture {
+      T_Stone25
+      scale 4    
+    }
+
+    rotate <20,0,90>
+    translate <0, 1, 0>
+  }
+
+    cone {
+    <1, 1, 0>, 0.3    // Centro e raio da primeira extremidade
+    <1, 2, 3>, 1.0    // Centro e raio da segunda extremidade
+    texture { T_Stone25 scale 4 }
+
+    rotate <100,0,0>
+    translate <-4, 2, 1>
+  }
+
+  sphere {
+  <-2.5, 2, 1>, .2
+  texture { T_Stone25 }
+  finish { ambient .4}
+}
+  
