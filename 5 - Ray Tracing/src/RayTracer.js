@@ -339,6 +339,7 @@ function getGeometries() {
   // geometries.push(...triangle2SpheresScene());
   // geometries.push(...trianglesInside());
   geometries.push(...abstractArt());
+  // geometries.push(...puppet());
 
   return geometries;
 }
@@ -390,8 +391,8 @@ function Render(geometries) {
           // Calculo do termo difuso do modelo local de iluminacao.
           let termo_difuso = (Ip.cor.clone().multiply(geometry.kd)).multiplyScalar(Math.max(0.0, interseccao.normal.dot(L)));
 
-          let R = L.clone().reflect(interseccao.normal); // Vetor normalizado que representa a reflexão de l em relação à n.
-          let V = interseccao.posicao.clone().normalize(); // Vetor normalizado que aponta para a câmera.
+          let R = L.clone().multiplyScalar(-1).reflect(interseccao.normal); // Vetor normalizado que representa a reflexão de l em relação à n.
+          let V = raio.origem.clone().sub(interseccao.posicao.clone()).normalize(); // Vetor normalizado que aponta para a câmera.
 
           // Calculo do termo especular do modelo local de iluminacao.
           let termo_especular = (Ip.cor.clone().multiply(geometry.ks)).multiplyScalar(Math.pow(Math.max(0.0, R.dot(V)), geometry.n));
@@ -655,6 +656,97 @@ function abstractArt() {
     // geometries.push(triangleSet);
 
   }
+
+  return geometries;
+}
+
+function puppet() {
+
+  let geometries = [];
+
+  let leftArm = new Triangulo(
+    new THREE.Vector3(0.0, 1.5, -3.0),
+    new THREE.Vector3(2.0, -1, -3),
+    new THREE.Vector3(0.0, 1.0, -3.5));
+  leftArm.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  leftArm.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  leftArm.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  leftArm.n = 32;
+  geometries.push(leftArm);
+
+  let rightArm = new Triangulo(
+    new THREE.Vector3(0.0, 1.5, -3.0),
+    new THREE.Vector3(-2.0, -1.0, -3.0),
+    new THREE.Vector3(0.0, 1.0, -3.5));
+  rightArm.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  rightArm.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  rightArm.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  rightArm.n = 32;
+  geometries.push(rightArm);
+
+  let ball = new Esfera(new THREE.Vector3(-2.0, -1.3, -3.0), 0.5);
+  ball.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  ball.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  ball.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  ball.n = 32;
+  geometries.push(ball);
+
+  let body = new Triangulo(
+    new THREE.Vector3(0.0, 1.9, -3.0),
+    new THREE.Vector3(1.0, -1.0, -3.5),
+    new THREE.Vector3(-1.0, -1.0, -3.5));
+  body.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  body.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  body.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  body.n = 32;
+  geometries.push(body);
+
+  let head = new Esfera(new THREE.Vector3(0.0, 1.9, -3.0), 0.7);
+  head.ka = new THREE.Vector3(1.0, 0.0, 0.0);
+  head.kd = new THREE.Vector3(1.0, 0.0, 0.0);
+  head.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  head.n = 32;
+  geometries.push(head);
+
+  let pyramid1Left = new Triangulo(
+    new THREE.Vector3(0.0, -1.9, -3.0),
+    new THREE.Vector3(0.0, -1.0, -3.0),
+    new THREE.Vector3(-0.8, -0.75, -3.0));
+  pyramid1Left.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid1Left.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid1Left.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  pyramid1Left.n = 32;
+  geometries.push(pyramid1Left);
+
+  let pyramid1Right = new Triangulo(
+    new THREE.Vector3(0.0, -1.9, -3.0),
+    new THREE.Vector3(0.0, -1.0, -3.0),
+    new THREE.Vector3(0.8, -0.75, -3.0));
+  pyramid1Right.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid1Right.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid1Right.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  pyramid1Right.n = 32;
+  geometries.push(pyramid1Right);
+
+  let pyramid2Left = new Triangulo(
+    new THREE.Vector3(0.0, -1.9, -3.0),
+    new THREE.Vector3(2.0, -2.3, -3.0),
+    new THREE.Vector3(0.8, -0.75, -3.0));
+  pyramid2Left.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid2Left.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid2Left.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  pyramid2Left.n = 32;
+  geometries.push(pyramid2Left);
+
+  let pyramid2Right = new Triangulo(
+    new THREE.Vector3(0.0, -1.9, -3.0),
+    new THREE.Vector3(-2.0, -2.3, -3.0),
+    new THREE.Vector3(-0.8, -0.75, -3.0));
+  pyramid2Right.ka = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid2Right.kd = new THREE.Vector3(1.0, 1.0, 0.0);
+  pyramid2Right.ks = new THREE.Vector3(1.0, 1.0, 1.0);
+  pyramid2Right.n = 32;
+  geometries.push(pyramid2Right);
 
   return geometries;
 }
